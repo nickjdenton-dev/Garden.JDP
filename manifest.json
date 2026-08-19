@@ -1,6 +1,6 @@
 {
-  "name": "Raincheck",
-  "short_name": "Raincheck",
+  "name": "garden.jdp",
+  "short_name": "garden.jdp",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -2,6 +2,9 @@ const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 
 const NY = "America/New_York";
+const APP_NAME = "garden.jdp";
+const MIN_SCALE = 0.75;
+const MAX_SCALE = 3.4;
 
 const SOILS = [
   {
@@ -48,7 +51,14 @@ const state = {
   snapshot: null,
   briefing: null,
   openPlantId: null,
+  adding: false,
 };
+
+const mapView = { x: 0, y: 0, scale: 1 };
+const pointers = new Map();
+let lastPinch = 0;
+let drag = null;
+let mapMoved = false;
 
 function todayNy(nowMs = Date.now()) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -72,13 +82,6 @@ function esc(value) {
 
 function shortPlace(name) {
   return String(name || "Hobe Sound").split(",")[0].trim() || "Hobe Sound";
-}
-
-function firstSentence(text) {
-  const raw = String(text || "").trim();
-  if (!raw) return "";
-  const match = raw.match(/^.+?[.](?=\s|$)/);
-  return match ? match[0] : raw;
 }
 
 function plantLastMs(plant) {
@@ -111,6 +114,81 @@ function toxLabel(toxicity) {
 
 function persist() {
   RaincheckStore.save(state.garden);
+}
+
+async function backupGarden() {
+  const blob = RaincheckStore.backupBlob(state.garden);
+  const file = new File([blob], "garden.jdp.json", { type: "application/json" });
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: "garden.jdp" });
+      return;
+    }
+  } catch (err) {
+    if (err && err.name === "AbortError") return;
+  }
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "garden.jdp.json";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function restoreGarden(file) {
+  if (!file) return;
+  const garden = RaincheckStore.parseBackup(await file.text());
+  state.garden = garden;
+  persist();
+  await refreshWeather();
+}
+
+function showTab(name) {
+  $$(".tab").forEach((el) => el.classList.toggle("is-on", el.dataset.tab === name));
+  $$(".panel").forEach((el) => el.classList.toggle("is-on", el.id === `panel-${name}`));
+}
+
+function nextNickname(species) {
+  const base = species.common_name;
+  const count = state.garden.plants.filter((p) => p.species_id === species.id).length;
+  return count ? `${base} ${count + 1}` : base;
+}
+
+function plantSpot(plant) {
+  if (BED[plant.id]) return BED[plant.id];
+  const extras = state.garden.plants.filter((p) => !BED[p.id]);
+  const n = Math.max(extras.findIndex((p) => p.id === plant.id), 0);
+  return {
+    x: 14 + (n % 4) * 24,
+    y: 86 - Math.floor(n / 4) * 16,
+  };
+}
+
+async function addPlant(speciesId) {
+  const species = state.library.species[speciesId];
+  if (!species) return;
+  state.garden.plants.push({
+    id: `${speciesId}-${Math.random().toString(16).slice(2, 10)}`,
+    species_id: speciesId,
+    nickname: nextNickname(species),
+    notes: "",
+    last_watered: null,
+    active: true,
+    weekly_need_override_mm: null,
+    dismissed_on: null,
+  });
+  persist();
+  showTab("garden");
+  closeSheet();
+  await refreshWeather();
+}
+
+function removePlant(id) {
+  state.garden.plants = state.garden.plants.filter((p) => p.id !== id);
+  persist();
+  return refreshWeather();
 }
 
 function thirstyPlants() {
@@ -172,7 +250,7 @@ function fillPlaceSelect() {
 function renderHeader() {
   const temp = state.briefing?.weather?.temp_f;
   $("#temp").textContent = temp == null ? "—" : `${temp}°`;
-  $("#place-btn").textContent = shortPlace(state.garden.settings.place_name);
+  $("#place-name").textContent = shortPlace(state.garden.settings.place_name);
 }
 
 function renderThirst() {
@@ -186,21 +264,60 @@ function renderThirst() {
   $("#thirst-label").textContent = due.length === 1 ? "Thirsty" : `${due.length} thirsty`;
 }
 
+function clampMap() {
+  const bed = $("#bed");
+  const map = $("#bed-map");
+  if (!bed || !map) return;
+  const w = bed.clientWidth;
+  const h = bed.clientHeight;
+  const sw = map.offsetWidth * mapView.scale;
+  const sh = map.offsetHeight * mapView.scale;
+  const minX = Math.min(0, w - sw);
+  const minY = Math.min(0, h - sh);
+  mapView.x = Math.min(0, Math.max(minX, mapView.x));
+  mapView.y = Math.min(0, Math.max(minY, mapView.y));
+}
+
+function applyMapView() {
+  clampMap();
+  const map = $("#bed-map");
+  if (!map) return;
+  map.style.transform = `translate(${mapView.x}px, ${mapView.y}px) scale(${mapView.scale})`;
+}
+
+function zoomAt(clientX, clientY, nextScale) {
+  const bed = $("#bed");
+  const rect = bed.getBoundingClientRect();
+  const px = clientX - rect.left;
+  const py = clientY - rect.top;
+  const prev = mapView.scale;
+  const scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, nextScale));
+  const mx = (px - mapView.x) / prev;
+  const my = (py - mapView.y) / prev;
+  mapView.scale = scale;
+  mapView.x = px - mx * scale;
+  mapView.y = py - my * scale;
+  applyMapView();
+}
+
+function zoomBy(factor) {
+  const bed = $("#bed");
+  const rect = bed.getBoundingClientRect();
+  zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, mapView.scale * factor);
+}
+
 function renderBed() {
   const decisions = state.briefing?.decisions || [];
-  $("#bed").innerHTML = state.garden.plants
-    .map((plant, index) => {
-      const species = state.library.species[plant.species_id] || {};
+  $("#bed-map").innerHTML = state.garden.plants
+    .map((plant) => {
       const decision = decisions.find((d) => d.plant_id === plant.id);
       const kind = statusOf(decision, plant);
-      const spot = BED[plant.id] || {
-        x: 12 + (index % 5) * 19,
-        y: 18 + Math.floor(index / 5) * 28,
-      };
+      const spot = plantSpot(plant);
       const glyph = RaincheckGlyphs.svg(plant.species_id);
       return `<button type="button" class="stem is-${kind}" style="left:${spot.x}%;top:${spot.y}%" data-plant="${esc(plant.id)}" role="listitem">${glyph}<b>${esc(plant.nickname)}</b></button>`;
     })
     .join("");
+  applyMapView();
 }
 
 function renderExplore() {
@@ -211,20 +328,67 @@ function renderExplore() {
       .filter(Boolean)
       .map(
         (s) =>
-          `<div class="soil-item">${RaincheckGlyphs.svg(s.id)}<span>${esc(s.common_name)}</span></div>`
+          `<button type="button" class="soil-item" data-add="${esc(s.id)}">${RaincheckGlyphs.svg(s.id)}<span>${esc(s.common_name)}</span></button>`
       )
       .join("");
     return `<section class="soil"><h2>${group.name}</h2><div class="soil-row">${items}</div></section>`;
   }).join("");
   $("#library").innerHTML = Object.values(species)
-    .map((s) => `<li>${esc(s.common_name)}</li>`)
+    .map((s) => `<li><button type="button" class="lib-hit" data-add="${esc(s.id)}">${esc(s.common_name)}</button></li>`)
     .join("");
+}
+
+function encyclopedia(species) {
+  const image = species.image || species.photo || species.image_url || "";
+  const links = species.links || species.sources || [];
+  return { image, links, species };
+}
+
+function listBlock(label, items) {
+  const rows = (items || []).filter(Boolean);
+  if (!rows.length) return "";
+  return `<section class="sheet-block"><h3 class="sheet-label">${esc(label)}</h3><ul>${rows.map((row) => `<li>${esc(row)}</li>`).join("")}</ul></section>`;
+}
+
+function linkBlock(links) {
+  if (!Array.isArray(links) || !links.length) return "";
+  const items = links
+    .map((item) => {
+      if (typeof item === "string") return { href: item, label: item };
+      const href = item.url || item.href || "";
+      if (!href) return null;
+      return { href, label: item.title || item.label || href };
+    })
+    .filter(Boolean);
+  if (!items.length) return "";
+  return `<section class="sheet-block"><h3 class="sheet-label">Links</h3><ul class="sheet-links">${items
+    .map((item) => `<li><a href="${esc(item.href)}" target="_blank" rel="noopener">${esc(item.label)}</a></li>`)
+    .join("")}</ul></section>`;
 }
 
 function closeSheet() {
   state.openPlantId = null;
+  state.adding = false;
   $("#sheet").hidden = true;
   $("#sheet-backdrop").hidden = true;
+}
+
+function openAddSheet() {
+  if (!state.library) return;
+  state.openPlantId = null;
+  state.adding = true;
+  $("#sheet-body").innerHTML = `
+    <div class="add-list">
+      ${Object.values(state.library.species)
+        .map(
+          (s) =>
+            `<button type="button" class="add-row" data-add="${esc(s.id)}">${RaincheckGlyphs.svg(s.id)}<span>${esc(s.common_name)}</span><b>+</b></button>`
+        )
+        .join("")}
+    </div>
+  `;
+  $("#sheet").hidden = false;
+  $("#sheet-backdrop").hidden = false;
 }
 
 function openSheet(plantId) {
@@ -234,17 +398,29 @@ function openSheet(plantId) {
   const decision = (state.briefing?.decisions || []).find((d) => d.plant_id === plant.id);
   const kind = statusOf(decision, plant);
   const tox = toxLabel(species.toxicity);
+  const info = encyclopedia(species);
   state.openPlantId = plantId;
   $("#sheet-body").innerHTML = `
+    ${info.image ? `<img class="sheet-photo" src="${esc(info.image)}" alt="">` : ""}
     <h2>${esc(plant.nickname)}</h2>
     <p class="latin">${esc(species.scientific_name || "")}</p>
+    ${species.family ? `<p class="family">${esc(species.family)}</p>` : ""}
     <p class="status ${kind}">${statusLabel(kind)}</p>
-    <p class="fact">${esc(firstSentence(species.soil))}</p>
-    <p class="fact">${esc(firstSentence(species.sun))}</p>
+    ${species.soil ? `<p class="fact">${esc(species.soil)}</p>` : ""}
+    ${species.sun ? `<p class="fact">${esc(species.sun)}</p>` : ""}
+    ${species.placement ? `<p class="fact">${esc(species.placement)}</p>` : ""}
+    ${species.water_method ? `<p class="fact">${esc(species.water_method)}</p>` : ""}
+    ${species.edible_parts ? `<p class="fact">${esc(species.edible_parts)}</p>` : ""}
+    ${species.climate_fit ? `<p class="fact">${esc(species.climate_fit)}</p>` : ""}
     ${tox ? `<p class="flag">${tox}</p>` : ""}
+    ${listBlock("Notes", species.notes)}
+    ${listBlock("Amendments", species.amendments)}
+    ${listBlock("Warnings", species.warnings)}
+    ${linkBlock(info.links)}
     <div class="sheet-actions">
       <button type="button" data-sheet="watered">Watered</button>
       ${kind === "water" ? `<button type="button" class="ghost" data-sheet="dismiss">Dismiss</button>` : ""}
+      <button type="button" class="ghost" data-sheet="remove">Remove</button>
     </div>
   `;
   $("#sheet").hidden = false;
@@ -257,7 +433,8 @@ function renderAll() {
   renderBed();
   renderExplore();
   fillPlaceSelect();
-  if (state.openPlantId) openSheet(state.openPlantId);
+  if (state.adding) openAddSheet();
+  else if (state.openPlantId) openSheet(state.openPlantId);
 }
 
 function maybeNotify(briefing) {
@@ -269,7 +446,7 @@ function maybeNotify(briefing) {
   if (navigator.serviceWorker?.controller) {
     navigator.serviceWorker.controller.postMessage({ type: "WATERING", body });
   } else {
-    new Notification("Raincheck", { body, icon: "./icon.png" });
+    new Notification(APP_NAME, { body, icon: "./icon.png" });
   }
 }
 
@@ -291,6 +468,34 @@ function saveStation(placeName, latitude, longitude) {
   return refreshWeather();
 }
 
+async function useHere() {
+  if (!navigator.geolocation) return;
+  const pos = await new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      enableHighAccuracy: true,
+      timeout: 12000,
+    });
+  });
+  const lat = pos.coords.latitude;
+  const lon = pos.coords.longitude;
+  let name = "Here";
+  try {
+    const params = new URLSearchParams({
+      latitude: String(lat),
+      longitude: String(lon),
+      language: "en",
+      format: "json",
+    });
+    const response = await fetch(`https://geocoding-api.open-meteo.com/v1/reverse?${params}`);
+    const payload = await response.json();
+    const row = (payload.results || [])[0];
+    if (row) name = [row.name, row.admin1, row.country].filter(Boolean).join(", ");
+  } catch {
+    name = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+  }
+  await saveStation(name, lat, lon);
+}
+
 function markWatered(ids) {
   const stamp = new Date().toISOString();
   const set = new Set(ids);
@@ -301,6 +506,10 @@ function markWatered(ids) {
   });
   persist();
   return refreshWeather();
+}
+
+function waterAll() {
+  return markWatered(state.garden.plants.map((plant) => plant.id));
 }
 
 function dismissToday(ids) {
@@ -316,13 +525,20 @@ function dismissToday(ids) {
 
 $$(".tab").forEach((btn) => {
   btn.addEventListener("click", () => {
-    $$(".tab").forEach((el) => el.classList.remove("is-on"));
-    $$(".panel").forEach((el) => el.classList.remove("is-on"));
-    btn.classList.add("is-on");
-    $(`#panel-${btn.dataset.tab}`).classList.add("is-on");
+    showTab(btn.dataset.tab);
     closeSheet();
     $("#place-pop").hidden = true;
   });
+});
+
+$("#soils").addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-add]");
+  if (btn) addPlant(btn.dataset.add);
+});
+
+$("#library").addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-add]");
+  if (btn) addPlant(btn.dataset.add);
 });
 
 $("#place-btn").addEventListener("click", (event) => {
@@ -334,6 +550,15 @@ $("#place-select").addEventListener("change", async (event) => {
   const opt = event.target.selectedOptions[0];
   if (!opt?.dataset.lat) return;
   await saveStation(opt.value, opt.dataset.lat, opt.dataset.lon);
+});
+
+$("#here-btn").addEventListener("click", async (event) => {
+  event.stopPropagation();
+  try {
+    await useHere();
+  } catch {
+    $("#place-pop").hidden = true;
+  }
 });
 
 let searchTimer;
@@ -368,21 +593,106 @@ $("#place-results").addEventListener("click", async (event) => {
   await saveStation(btn.dataset.name, btn.dataset.lat, btn.dataset.lon);
 });
 
+$("#water-all").addEventListener("click", () => waterAll());
+$("#backup").addEventListener("click", () => backupGarden());
+$("#restore").addEventListener("click", () => $("#restore-file").click());
+$("#restore-file").addEventListener("change", async (event) => {
+  const file = event.target.files && event.target.files[0];
+  event.target.value = "";
+  await restoreGarden(file);
+});
 $("#thirst-watered").addEventListener("click", () => markWatered(thirstyPlants().map((d) => d.plant_id)));
 $("#thirst-dismiss").addEventListener("click", () => dismissToday(thirstyPlants().map((d) => d.plant_id)));
 
-$("#bed").addEventListener("click", (event) => {
-  const btn = event.target.closest("[data-plant]");
-  if (!btn) return;
-  openSheet(btn.dataset.plant);
+const bed = $("#bed");
+
+bed.addEventListener("pointerdown", (event) => {
+  if (event.target.closest(".bed-tools")) return;
+  pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+  bed.setPointerCapture(event.pointerId);
+  mapMoved = false;
+  if (pointers.size === 1) {
+    drag = { x: event.clientX, y: event.clientY, ox: mapView.x, oy: mapView.y };
+  } else if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    lastPinch = Math.hypot(a.x - b.x, a.y - b.y);
+    drag = null;
+  }
+});
+
+bed.addEventListener("pointermove", (event) => {
+  if (!pointers.has(event.pointerId)) return;
+  pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    const dist = Math.hypot(a.x - b.x, a.y - b.y);
+    if (lastPinch) {
+      zoomAt((a.x + b.x) / 2, (a.y + b.y) / 2, mapView.scale * (dist / lastPinch));
+      mapMoved = true;
+    }
+    lastPinch = dist;
+    return;
+  }
+  if (!drag) return;
+  const dx = event.clientX - drag.x;
+  const dy = event.clientY - drag.y;
+  if (Math.hypot(dx, dy) > 8) mapMoved = true;
+  if (!mapMoved) return;
+  mapView.x = drag.ox + dx;
+  mapView.y = drag.oy + dy;
+  applyMapView();
+});
+
+function endPointer(event) {
+  const stem = event.target.closest("[data-plant]");
+  pointers.delete(event.pointerId);
+  if (pointers.size < 2) lastPinch = 0;
+  if (pointers.size === 0) {
+    if (!mapMoved && stem) openSheet(stem.dataset.plant);
+    drag = null;
+  }
+}
+
+bed.addEventListener("pointerup", endPointer);
+bed.addEventListener("pointercancel", endPointer);
+
+bed.addEventListener(
+  "wheel",
+  (event) => {
+    event.preventDefault();
+    const factor = event.deltaY < 0 ? 1.12 : 1 / 1.12;
+    zoomAt(event.clientX, event.clientY, mapView.scale * factor);
+  },
+  { passive: false }
+);
+
+$("#add-plant").addEventListener("click", (event) => {
+  event.stopPropagation();
+  openAddSheet();
+});
+
+$("#zoom-in").addEventListener("click", (event) => {
+  event.stopPropagation();
+  zoomBy(1.2);
+});
+
+$("#zoom-out").addEventListener("click", (event) => {
+  event.stopPropagation();
+  zoomBy(1 / 1.2);
 });
 
 $("#sheet").addEventListener("click", async (event) => {
+  const add = event.target.closest("[data-add]");
+  if (add) {
+    await addPlant(add.dataset.add);
+    return;
+  }
   const act = event.target.dataset.sheet;
   if (!act || !state.openPlantId) return;
   const id = state.openPlantId;
   if (act === "watered") await markWatered([id]);
   if (act === "dismiss") await dismissToday([id]);
+  if (act === "remove") await removePlant(id);
   closeSheet();
 });
 
@@ -401,7 +711,7 @@ async function boot() {
   const response = await fetch("./library.json");
   if (!response.ok) throw new Error("library");
   state.library = await response.json();
-  state.garden = RaincheckStore.load(state.library);
+  state.garden = await RaincheckStore.loadAsync(state.library);
   renderAll();
   await refreshWeather();
 }

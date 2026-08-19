@@ -58,9 +58,22 @@ button {
   padding-bottom: 8px;
 }
 
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.brand-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 400;
   letter-spacing: 0.01em;
 }
@@ -71,25 +84,31 @@ h1 {
 }
 
 .wx {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-}
-
-#temp {
-  font-size: 22px;
-  font-variant-numeric: tabular-nums;
-}
-
-.place {
   appearance: none;
   background: none;
   border: 0;
   padding: 0;
-  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  text-align: right;
+}
+
+#temp {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+#place-name {
+  font-size: 10px;
   color: var(--faint);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
+  max-width: 42vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .place-pop {
@@ -172,7 +191,7 @@ h1 {
 }
 
 #thirst-label {
-  color: var(--gold);
+  color: var(--alert);
   font-size: 18px;
 }
 
@@ -181,7 +200,7 @@ h1 {
   gap: 8px;
 }
 
-button:not(.tab):not(.place):not(.place-hit):not(.stem) {
+button:not(.tab):not(.wx):not(.place-hit):not(.stem):not(.lib-hit):not(.soil-item):not(.zoom):not(.add-row) {
   appearance: none;
   border: 0;
   border-radius: 999px;
@@ -197,15 +216,104 @@ button.ghost {
   box-shadow: inset 0 0 0 1px var(--line);
 }
 
-.bed {
+.bed-wrap {
   flex: 1 1 auto;
   min-height: 0;
   position: relative;
+}
+
+.bed {
+  height: 100%;
+  position: relative;
   overflow: hidden;
+  touch-action: none;
+  user-select: none;
   background:
     radial-gradient(120% 80% at 50% 110%, rgba(31, 61, 43, 0.08), transparent 55%),
     linear-gradient(180deg, transparent, rgba(169, 196, 180, 0.18));
   border-radius: 28px;
+}
+
+.bed-map {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 132%;
+  height: 132%;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.bed-tools {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: grid;
+  gap: 6px;
+  z-index: 2;
+}
+
+.zoom {
+  appearance: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(244, 237, 225, 0.92);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.add-fab {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 3;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.add-row {
+  appearance: none;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 0;
+  border-radius: 14px;
+  padding: 8px 4px;
+  text-align: left;
+  color: var(--green);
+  font-size: 16px;
+}
+
+.add-row svg {
+  width: 36px;
+  height: 36px;
+  padding: 3px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.add-row b {
+  font-weight: 400;
+  color: var(--gold);
+  font-size: 22px;
+}
+
+.add-list {
+  display: grid;
+  gap: 4px;
 }
 
 .stem {
@@ -220,6 +328,7 @@ button.ghost {
   justify-items: center;
   gap: 2px;
   color: var(--sage);
+  touch-action: none;
 }
 
 .stem svg {
@@ -243,16 +352,15 @@ button.ghost {
 }
 
 .stem.is-water {
-  color: var(--gold);
+  color: var(--alert);
 }
 
 .stem.is-watch {
-  color: var(--alert);
+  color: var(--gold);
 }
 
 .stem.is-ok {
   color: var(--sage);
-  opacity: 0.72;
 }
 
 .explore {
@@ -267,7 +375,8 @@ button.ghost {
 }
 
 .section-label,
-.soil h2 {
+.soil h2,
+.sheet-label {
   margin: 0 0 8px;
   font-size: 13px;
   font-weight: 400;
@@ -292,6 +401,10 @@ button.ghost {
 }
 
 .soil-item {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
   display: grid;
   justify-items: center;
   gap: 4px;
@@ -299,6 +412,13 @@ button.ghost {
   color: var(--green);
   font-size: 11px;
   text-align: center;
+}
+
+.soil-item::after {
+  content: "+";
+  color: var(--gold);
+  font-size: 16px;
+  line-height: 1;
 }
 
 .soil-item svg {
@@ -320,7 +440,26 @@ button.ghost {
 }
 
 .library li {
+  list-style: none;
+}
+
+.lib-hit {
+  appearance: none;
+  background: rgba(169, 196, 180, 0.28);
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 12px;
   color: var(--green);
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lib-hit::after {
+  content: "+";
+  color: var(--gold);
+  font-size: 18px;
 }
 
 .tabs {
@@ -362,8 +501,18 @@ button.ghost {
   background: var(--paper);
   border-radius: 24px 24px 0 0;
   padding: 22px 22px calc(18px + env(safe-area-inset-bottom));
-  max-height: 52dvh;
+  max-height: 78dvh;
   overflow: auto;
+}
+
+.sheet-photo {
+  display: block;
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin: 0 0 14px;
+  background: rgba(169, 196, 180, 0.28);
 }
 
 .sheet h2 {
@@ -373,9 +522,15 @@ button.ghost {
 }
 
 .latin {
-  margin: 4px 0 12px;
+  margin: 4px 0 4px;
   font-style: italic;
   font-size: 14px;
+  color: var(--faint);
+}
+
+.family {
+  margin: 0 0 12px;
+  font-size: 12px;
   color: var(--faint);
 }
 
@@ -385,11 +540,11 @@ button.ghost {
 }
 
 .status.water {
-  color: var(--gold);
+  color: var(--alert);
 }
 
 .status.watch {
-  color: var(--alert);
+  color: var(--gold);
 }
 
 .status.ok {
@@ -399,8 +554,33 @@ button.ghost {
 .fact {
   margin: 0 0 8px;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--green);
+}
+
+.sheet-block {
+  margin: 14px 0 0;
+}
+
+.sheet-block ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--green);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.sheet-block li + li {
+  margin-top: 6px;
+}
+
+.sheet-links {
+  list-style: none;
+  padding: 0;
+}
+
+.sheet-links a {
+  color: var(--gold);
 }
 
 .flag {
@@ -411,6 +591,7 @@ button.ghost {
 
 .sheet-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 16px;
 }
