@@ -1,0 +1,669 @@
+{
+  "species": {
+    "dwarf-banana": {
+      "id": "dwarf-banana",
+      "common_name": "Dwarf banana",
+      "scientific_name": "Musa acuminata (dwarf cultivar)",
+      "family": "Musaceae",
+      "roles": [
+        "edible",
+        "functional"
+      ],
+      "toxicity": "none",
+      "edible_parts": "Ripe fruit. Flowers and inner pseudostem are also eaten in some cuisines.",
+      "weekly_need_mm": 32.0,
+      "kc": 1.0,
+      "skip_if_rain_mm": 20.0,
+      "lookback_hours": 48,
+      "min_interval_days": 1.5,
+      "max_interval_days": 3.0,
+      "overwater_sensitive": false,
+      "sprinkle_threshold_mm": 0.8,
+      "hourly_cap_mm": 12.0,
+      "dormant_months": [],
+      "dormant_factor": 1.0,
+      "water_method": "deep soak",
+      "sun": "Full sun. Light shade is tolerated; fruiting is better in sun.",
+      "soil": "Rich, moisture-retentive, but never waterlogged. South Florida sand needs organic matter.",
+      "amendments": [
+        "3\u20136 inches of coarse mulch (leaves, wood chips, banana trash) kept off the pseudostem.",
+        "Compost in the planting hole and as a top-dress in the warm season.",
+        "High-potassium fertilizer around 3-1-6 (N-P-K). Bananas are potassium hogs.",
+        "Magnesium if older leaves yellow between the veins (Epsom salt as a light soil drench, not a weekly habit).",
+        "Chelated iron or manganese if new leaves yellow on limestone soil."
+      ],
+      "placement": "Warm, wind-buffered spot that does not pond after summer storms. 10+ ft from structures that falling stems could hit.",
+      "notes": [
+        "UF/IFAS: about 1\u20131.5 inches (25\u201338 mm) of water per week, more critical in the November\u2013April dry season.",
+        "Midday wilt on hot days can be temporary; overnight recovery is normal. Persistent limp leaves mean the sand dried out.",
+        "Keep 3\u20134 stems of different ages per mat: one fruiting, one half-grown, one or two sword suckers.",
+        "Do not let the mat sit in a saucer of water. Flooding and poor drainage cause corm rot."
+      ],
+      "warnings": [],
+      "climate_fit": "good"
+    },
+    "mona-lisa-banana": {
+      "id": "mona-lisa-banana",
+      "common_name": "Mona Lisa banana",
+      "scientific_name": "Musa 'Mona Lisa'",
+      "family": "Musaceae",
+      "roles": [
+        "edible",
+        "functional"
+      ],
+      "toxicity": "none",
+      "edible_parts": "Ripe fruit (compact ornamental-edible cultivar).",
+      "weekly_need_mm": 28.0,
+      "kc": 0.95,
+      "skip_if_rain_mm": 18.0,
+      "lookback_hours": 48,
+      "min_interval_days": 1.5,
+      "max_interval_days": 3.5,
+      "overwater_sensitive": false,
+      "sprinkle_threshold_mm": 0.8,
+      "hourly_cap_mm": 12.0,
+      "dormant_months": [],
+      "dormant_factor": 1.0,
+      "water_method": "deep soak",
+      "sun": "Full sun to light shade.",
+      "soil": "Same as other bananas: compost-amended sand, mulched, free-draining.",
+      "amendments": [
+        "Mulch and compost as for the dwarf banana.",
+        "Slightly lighter feeding than a full-size Cavendish because the canopy is smaller \u2014 still potassium-forward.",
+        "Do not use a cactus/succulent fertilizer on bananas."
+      ],
+      "placement": "Can sit closer to paths than a tall banana, but still needs wind room and no standing water.",
+      "notes": [
+        "Treat watering like a banana, not like a houseplant. Tiny stature does not mean tiny thirst while it is growing.",
+        "If this plant is still in a pot, it will dry faster than the in-ground dwarf banana. Check the pot on rainless afternoons."
+      ],
+      "warnings": [],
+      "climate_fit": "good"
+    },
+    "passionflower": {
+      "id": "passionflower",
+      "common_name": "Passionflower",
+      "scientific_name": "Passiflora spp. (often P. edulis for fruit)",
+      "family": "Passifloraceae",
+      "roles": [
+        "edible",
+        "medicinal",
+        "functional"
+      ],
+      "toxicity": "low",
+      "edible_parts": "Ripe fruit pulp. Leaves and unripe fruit of some species are not food. P. incarnata aerial parts are the usual herbal material \u2014 do not improvise from unknown species.",
+      "weekly_need_mm": 22.0,
+      "kc": 0.8,
+      "skip_if_rain_mm": 15.0,
+      "lookback_hours": 60,
+      "min_interval_days": 2.0,
+      "max_interval_days": 5.0,
+      "overwater_sensitive": false,
+      "sprinkle_threshold_mm": 0.7,
+      "hourly_cap_mm": 10.0,
+      "dormant_months": [],
+      "dormant_factor": 1.0,
+      "water_method": "deep soak",
+      "sun": "Full sun for fruiting; light afternoon shade is fine in August.",
+      "soil": "Compost-rich, well drained. Passionfruit hates wet feet and also hates drought while sizing fruit.",
+      "amendments": [
+        "Compost and a 2\u20133 inch mulch ring.",
+        "Balanced fertilizer in spring and early summer; ease off nitrogen if you get all vine and no flowers.",
+        "Trellis or fence. Do not let the vine smother bananas or vanilla."
+      ],
+      "placement": "Strong trellis in sun, with airflow. Keep roots in a mulched bed, not a puddle.",
+      "notes": [
+        "Gulf fritillary caterpillars will eat leaves \u2014 that is the plant working as habitat, not a failure.",
+        "Some clones need a pollen partner or hand pollination for a full crop.",
+        "Carpophilus and fruit flies hit ripe passionfruit in Florida; harvest often."
+      ],
+      "warnings": [
+        "Confirm the species before using leaves as tea. Ornamental Passiflora species are not interchangeable with P. incarnata."
+      ],
+      "climate_fit": "good"
+    },
+    "vanilla": {
+      "id": "vanilla",
+      "common_name": "Vanilla bean orchid",
+      "scientific_name": "Vanilla planifolia",
+      "family": "Orchidaceae",
+      "roles": [
+        "edible",
+        "functional"
+      ],
+      "toxicity": "none",
+      "edible_parts": "Cured beans only, after a long harvest and curing process. Do not eat green beans as a snack.",
+      "weekly_need_mm": 12.0,
+      "kc": 0.45,
+      "skip_if_rain_mm": 10.0,
+      "lookback_hours": 72,
+      "min_interval_days": 4.0,
+      "max_interval_days": 10.0,
+      "overwater_sensitive": true,
+      "sprinkle_threshold_mm": 0.5,
+      "hourly_cap_mm": 6.0,
+      "dormant_months": [
+        12,
+        1
+      ],
+      "dormant_factor": 0.4,
+      "water_method": "moist mulch / light",
+      "sun": "Bright mottled shade, about 50\u201370% shade. Direct west sun burns leaves.",
+      "soil": "Chunky orchid / bark / leaf-litter mix. Roots want air. Never a dense potting mix that stays anaerobic.",
+      "amendments": [
+        "Coarse bark, wood chips, and decomposing leaf litter at the base \u2014 vanilla feeds from slow organics.",
+        "Do not pour rich compost or banana fertilizer into the crown.",
+        "A host tree, cedar slab, or open trellis to climb. Tie loosely; aerial roots grab on their own.",
+        "Optional weak orchid fertilizer at quarter strength only in active growth, and only if growth stalls."
+      ],
+      "placement": "East side of the banana clump or under a tree with airflow. Humidity from bananas helps; stagnant wet shade causes rot.",
+      "notes": [
+        "UF/IFAS: South Florida rain cycles suit vanilla. Established vines often need extra water only in extreme dry spells.",
+        "A drier stretch (roughly two months) helps trigger flowering. Do not keep it constantly wet in winter just to be kind.",
+        "Flowers last about one day. Hand-pollinate in the morning if you want beans.",
+        "Beans take many months on the vine, then a curing process. Wet weather during ripening can rot capsules."
+      ],
+      "warnings": [],
+      "climate_fit": "good"
+    },
+    "mulberry": {
+      "id": "mulberry",
+      "common_name": "Mulberry",
+      "scientific_name": "Morus spp.",
+      "family": "Moraceae",
+      "roles": [
+        "edible",
+        "functional"
+      ],
+      "toxicity": "low",
+      "edible_parts": "Ripe fruit. Unripe fruit and sap can irritate; white sap is not food.",
+      "weekly_need_mm": 18.0,
+      "kc": 0.7,
+      "skip_if_rain_mm": 14.0,
+      "lookback_hours": 72,
+      "min_interval_days": 3.0,
+      "max_interval_days": 8.0,
+      "overwater_sensitive": false,
+      "sprinkle_threshold_mm": 0.7,
+      "hourly_cap_mm": 10.0,
+      "dormant_months": [
+        12,
+        1
+      ],
+      "dormant_factor": 0.5,
+      "water_method": "deep soak",
+      "sun": "Full sun.",
+      "soil": "Average, well drained. Established trees are fairly drought-tough on Florida sand once mulched.",
+      "amendments": [
+        "Wide mulch ring, kept off the trunk.",
+        "Compost in late winter. Avoid heavy nitrogen that makes rank growth and bland fruit.",
+        "On alkaline fill, watch for iron chlorosis and correct with chelated iron if needed."
+      ],
+      "placement": "Full sun with space for fruit drop. Do not park cars or dry laundry under it in season.",
+      "notes": [
+        "Once established, skip water whenever a real rain has landed in the last few days.",
+        "Birds will harvest with you. Netting is a choice, not a requirement.",
+        "Prune for a reachable bowl. South Florida trees can stay evergreen-ish; still reduce water in cool dry weeks."
+      ],
+      "warnings": [],
+      "climate_fit": "good"
+    },
+    "turmeric": {
+      "id": "turmeric",
+      "common_name": "Turmeric",
+      "scientific_name": "Curcuma longa",
+      "family": "Zingiberaceae",
+      "roles": [
+        "edible",
+        "medicinal",
+        "functional"
+      ],
+      "toxicity": "none",
+      "edible_parts": "Rhizomes (fresh or dried). Leaves are used as wraps in some cuisines.",
+      "weekly_need_mm": 26.0,
+      "kc": 0.9,
+      "skip_if_rain_mm": 16.0,
+      "lookback_hours": 48,
+      "min_interval_days": 2.0,
+      "max_interval_days": 4.0,
+      "overwater_sensitive": false,
+      "sprinkle_threshold_mm": 0.7,
+      "hourly_cap_mm": 10.0,
+      "dormant_months": [
+        12,
+        1,
+        2
+      ],
+      "dormant_factor": 0.35,
+      "water_method": "deep soak",
+      "sun": "Morning sun, afternoon shade in South Florida. Banana understory is a classic tropical guild.",
+      "soil": "Loose, compost-rich, never compacted. Rhizomes rot in sour wet clay and starve in naked sand.",
+      "amendments": [
+        "Heavy compost and leaf mold before planting.",
+        "Mulch 2\u20134 inches. Turmeric wants a forest-floor feel, not bare limestone.",
+        "Balanced organic fertilizer during the warm growing months; stop pushing nitrogen when leaves start to yellow toward harvest.",
+        "A little bone meal or other phosphorus source at planting helps rhizome set. Do not salt the bed with high-P every month."
+      ],
+      "placement": "Under or just east of the bananas. Keep it out of the cactus irrigation zone.",
+      "notes": [
+        "Keep evenly moist while leafy. In a true cool-season dieback, water much less so rhizomes do not rot.",
+        "South Florida often keeps turmeric leafy longer than a temperate garden. Follow the plant, not a northern calendar.",
+        "Harvest after 8\u201310 months, or when foliage yellows. Leave a few rhizomes in place to carry the bed."
+      ],
+      "warnings": [],
+      "climate_fit": "good"
+    },
+    "san-pedro": {
+      "id": "san-pedro",
+      "common_name": "San Pedro cactus",
+      "scientific_name": "Echinopsis pachanoi (syn. Trichocereus pachanoi)",
+      "family": "Cactaceae",
+      "roles": [
+        "medicinal",
+        "functional"
+      ],
+      "toxicity": "bioactive",
+      "edible_parts": "Not a food crop. Tissue is bioactive (mescaline). This app tracks horticulture only.",
+      "weekly_need_mm": 6.0,
+      "kc": 0.2,
+      "skip_if_rain_mm": 4.0,
+      "lookback_hours": 168,
+      "min_interval_days": 10.0,
+      "max_interval_days": 21.0,
+      "overwater_sensitive": true,
+      "sprinkle_threshold_mm": 0.3,
+      "hourly_cap_mm": 8.0,
+      "dormant_months": [
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "dormant_factor": 0.15,
+      "water_method": "rare deep soak, then dry",
+      "sun": "Full sun once established. New cuttings prefer a week of bright shade.",
+      "soil": "Mineral and fast. Pumice, coarse sand, granite grit, very little peat. Raised bed or unglazed pot with drain holes.",
+      "amendments": [
+        "Grit and pumice, not compost piles. A small amount of aged compost is enough.",
+        "Do not share banana fertilizer, manure tea, or turf fertilizer with this plant.",
+        "A rain roof, eave, or tilt-able pot for the May\u2013October storm pattern is more useful than any bottled cactus food.",
+        "Refresh mineral mix if the pot stays wet more than two days after rain."
+      ],
+      "placement": "Hottest, driest, fastest-draining spot, physically separated from banana/turmeric irrigation. Not in the same bed as nightshade food-prep paths.",
+      "notes": [
+        "In South Florida the wet season is the danger, not the dry season. Overwatering and poor drainage kill more San Pedro than drought does.",
+        "If it rained this week, do not add water. If it rained for hours, check that the pot can drain and that the base is not sitting in a saucer.",
+        "Water deeply only after the mix is fully dry for several days, mostly in the winter\u2013spring dry season."
+      ],
+      "warnings": [
+        "Contains mescaline. Grow as an ornamental/ethnobotanical specimen. Do not ingest from garden advice in this app.",
+        "Keep away from children and pets who chew plants. Label the pot.",
+        "Do not put trimmings in the kitchen compost that you later spread on turmeric or loofah."
+      ],
+      "climate_fit": "fair"
+    },
+    "loofah": {
+      "id": "loofah",
+      "common_name": "Loofah",
+      "scientific_name": "Luffa aegyptiaca",
+      "family": "Cucurbitaceae",
+      "roles": [
+        "edible",
+        "functional"
+      ],
+      "toxicity": "none",
+      "edible_parts": "Young, tender fruits like zucchini. Mature dry fruits become sponges, not food. Leaves are not a salad green.",
+      "weekly_need_mm": 24.0,
+      "kc": 0.85,
+      "skip_if_rain_mm": 16.0,
+      "lookback_hours": 48,
+      "min_interval_days": 2.0,
+      "max_interval_days": 4.5,
+      "overwater_sensitive": false,
+      "sprinkle_threshold_mm": 0.7,
+      "hourly_cap_mm": 10.0,
+      "dormant_months": [
+        12,
+        1,
+        2
+      ],
+      "dormant_factor": 0.2,
+      "water_method": "deep soak",
+      "sun": "Full sun. South Florida season is long enough to finish sponges.",
+      "soil": "Rich, well drained, mulched. Cucurbits want food and even moisture while fruiting.",
+      "amendments": [
+        "Compost at planting and monthly top-dress in the growing season.",
+        "Mulch to keep sand from crusting and to cut down fruit rot on the ground \u2014 better yet, trellis.",
+        "Balanced fertilizer until vines run, then a potassium bump as fruits set.",
+        "Do not overdo nitrogen or you will get a jungle of leaves and few luffas."
+      ],
+      "placement": "Stout trellis in full sun, away from the toxic bed. Give the vine 10\u201320 ft of climb if you want sponges.",
+      "notes": [
+        "Pick young for eating; leave fruits on to brown and rattle for sponges.",
+        "Powdery mildew shows up in humid still air \u2014 airflow and morning water on soil, not leaves, help.",
+        "If the vine has died back in winter, skip watering until you replant or see new growth."
+      ],
+      "warnings": [],
+      "climate_fit": "good"
+    },
+    "deadly-nightshade": {
+      "id": "deadly-nightshade",
+      "common_name": "Deadly nightshade",
+      "scientific_name": "Atropa belladonna",
+      "family": "Solanaceae",
+      "roles": [
+        "medicinal"
+      ],
+      "toxicity": "high",
+      "edible_parts": "None. Berries look like food and are not. Roots, leaves, and berries are all toxic.",
+      "weekly_need_mm": 16.0,
+      "kc": 0.6,
+      "skip_if_rain_mm": 12.0,
+      "lookback_hours": 72,
+      "min_interval_days": 3.0,
+      "max_interval_days": 6.0,
+      "overwater_sensitive": true,
+      "sprinkle_threshold_mm": 0.6,
+      "hourly_cap_mm": 8.0,
+      "dormant_months": [
+        6,
+        7,
+        8
+      ],
+      "dormant_factor": 0.5,
+      "water_method": "light",
+      "sun": "Part shade. South Florida full sun plus wet heat is a poor match.",
+      "soil": "Well drained, moderately fertile. Prefers cooler, slightly alkaline soils of temperate regions \u2014 not Miami sand in August.",
+      "amendments": [
+        "Grow in a dedicated pot so you can move it to shade and keep roots out of the food beds.",
+        "A gritty, well-drained mix with modest compost. Do not rich-feed it into soft, extra-toxic lush growth.",
+        "Do not lime or fertilize from the same scoop you use on turmeric and bananas."
+      ],
+      "placement": "Isolated, labeled container well away from loofah, bananas, herbs, and anything a child might graze. Not in the kitchen-garden path.",
+      "notes": [
+        "Climate mismatch: Atropa belladonna is a cool-temperate plant (roughly USDA 5\u20139). In South Florida it often sulks, diseases, or dies in wet heat.",
+        "If the goal is a functional medicinal garden, consider keeping this as a potted specimen or replacing it with better-adapted plants (holy basil, lemongrass, ginger, roselle).",
+        "Water when the top inch is dry. Never combine its irrigation with the banana soaker hose."
+      ],
+      "warnings": [
+        "All parts contain tropane alkaloids (atropine, scopolamine, hyoscyamine). A few berries can kill a child.",
+        "Wear gloves. Dedicated scissors. Wash hands. Never taste-test. Never dry it on kitchen racks used for tea herbs.",
+        "Do not compost debris into edible beds. Bag and trash, or a separate toxic-waste pile far from food.",
+        "This app will never give preparation, dosage, or consumption advice for Atropa.",
+        "If someone ingests it, contact poison control (US: 1-800-222-1222) immediately."
+      ],
+      "climate_fit": "poor"
+    },
+    "butterfly-pea": {
+      "id": "butterfly-pea",
+      "common_name": "Butterfly pea",
+      "scientific_name": "Clitoria ternatea",
+      "family": "Fabaceae",
+      "roles": [
+        "edible",
+        "medicinal",
+        "functional"
+      ],
+      "toxicity": "none",
+      "edible_parts": "Flowers (tea, coloring). Young pods are eaten in some cuisines. This is not a protein-crop bean in the kitchen-pea sense.",
+      "weekly_need_mm": 14.0,
+      "kc": 0.55,
+      "skip_if_rain_mm": 10.0,
+      "lookback_hours": 72,
+      "min_interval_days": 3.0,
+      "max_interval_days": 7.0,
+      "overwater_sensitive": false,
+      "sprinkle_threshold_mm": 0.6,
+      "hourly_cap_mm": 9.0,
+      "dormant_months": [],
+      "dormant_factor": 1.0,
+      "water_method": "light to moderate",
+      "sun": "Full sun to light shade. Flowers best in sun.",
+      "soil": "Average to poor is fine. It is a nitrogen-fixing vine and does not want a high-N diet.",
+      "amendments": [
+        "Light compost at planting. Skip the banana-strength fertilizer.",
+        "Mulch to hold moisture in the dry season.",
+        "A trellis or fence. Pair near bananas as a living nitrogen contribution without sharing their heavy feed.",
+        "If leaves yellow uniformly on limestone, a trace-mineral mix is more likely than more nitrogen."
+      ],
+      "placement": "Trellis at the edge of the edible guild. Keep vines off the nightshade pot.",
+      "notes": [
+        "Once established it shrugs off short dry spells. New plants need steadier water for a few weeks.",
+        "Flowers make a deep blue tea that turns purple with lemon \u2014 a kitchen trick, not a medical claim.",
+        "Wet-season growth is easy. Dry-season watering is the one that actually matters."
+      ],
+      "warnings": [],
+      "climate_fit": "good"
+    }
+  },
+  "seed_plants": [
+    {
+      "id": "banana-tiny",
+      "species_id": "dwarf-banana",
+      "nickname": "Tiny banana",
+      "notes": "Dwarf banana. Assume in-ground or a large pot outdoors."
+    },
+    {
+      "id": "banana-mona-lisa",
+      "species_id": "mona-lisa-banana",
+      "nickname": "Mona Lisa banana",
+      "notes": "Compact Musa 'Mona Lisa'."
+    },
+    {
+      "id": "passionflower-1",
+      "species_id": "passionflower",
+      "nickname": "Passionflower",
+      "notes": "Trellis vine. Confirm whether this is fruiting P. edulis or another Passiflora before using leaves."
+    },
+    {
+      "id": "vanilla-1",
+      "species_id": "vanilla",
+      "nickname": "Vanilla bean orchid",
+      "notes": "Vanilla planifolia. Shade, airflow, chunky mix."
+    },
+    {
+      "id": "mulberry-1",
+      "species_id": "mulberry",
+      "nickname": "Mulberry",
+      "notes": "Morus. Full sun, fruit drop zone."
+    },
+    {
+      "id": "turmeric-1",
+      "species_id": "turmeric",
+      "nickname": "Turmeric",
+      "notes": "Curcuma longa. Understory moisture while leafy."
+    },
+    {
+      "id": "san-pedro-1",
+      "species_id": "san-pedro",
+      "nickname": "San Pedro cactus 1",
+      "notes": "Isolate from food-crop irrigation. Wet season: drain, don't water."
+    },
+    {
+      "id": "san-pedro-2",
+      "species_id": "san-pedro",
+      "nickname": "San Pedro cactus 2",
+      "notes": "Second specimen. Same dry, mineral bed or its own pot."
+    },
+    {
+      "id": "loofah-1",
+      "species_id": "loofah",
+      "nickname": "Loofah 1",
+      "notes": "Luffa aegyptiaca on a trellis."
+    },
+    {
+      "id": "loofah-2",
+      "species_id": "loofah",
+      "nickname": "Loofah 2",
+      "notes": "Second luffa vine."
+    },
+    {
+      "id": "nightshade-1",
+      "species_id": "deadly-nightshade",
+      "nickname": "Deadly nightshade",
+      "notes": "Atropa belladonna. Isolated pot. High toxicity. Poor South Florida climate fit."
+    },
+    {
+      "id": "butterfly-pea-1",
+      "species_id": "butterfly-pea",
+      "nickname": "Butterfly pea 1",
+      "notes": "Clitoria ternatea."
+    },
+    {
+      "id": "butterfly-pea-2",
+      "species_id": "butterfly-pea",
+      "nickname": "Butterfly pea 2",
+      "notes": "Second Clitoria ternatea."
+    }
+  ],
+  "advice": {
+    "title": "South Florida edible / functional / toxic garden",
+    "region": "South Florida is USDA 10a\u201311a with a wet season (roughly May\u2013mid-October) and a dry season (November\u2013April). Average rain is high, but two-thirds of it falls in the wet months, and sandy or Miami limestone soils store very little of it. Irrigation exists to cover what the sky skipped, not to water on a calendar.",
+    "layout": [
+      "Split the yard into three irrigation zones. Do not run one soaker hose across all of these plants.",
+      "Zone A \u2014 thirsty tropics: both bananas, turmeric as understory, mulberry at the sunny edge. Heavy mulch, compost, potassium for bananas.",
+      "Zone B \u2014 vines: passionflower, both loofahs, both butterfly peas on trellises in sun. Moderate even moisture. Butterfly pea is a nitrogen fixer; do not high-N it.",
+      "Zone C \u2014 dry / toxic isolation: both San Pedro on mineral grit in the hottest drainable spot, ideally under an eave in summer. Deadly nightshade in its own labeled pot, in shade, off the food path.",
+      "Vanilla sits between A and shade: east side of the banana clump or a tree, with airflow so stems dry after storms. Do not put vanilla on the banana fertilizer schedule."
+    ],
+    "amendments_general": [
+      "South Florida sand: add compost and mulch to every food plant. That is the main water-holding amendment.",
+      "Limestone fill: expect iron, manganese, and magnesium shortages. Correct with chelates and compost, not by dumping more nitrogen.",
+      "Bananas: 3-1-6 style feed and thick mulch. Turmeric: compost and shade-mulch. Cactus: grit, not manure.",
+      "Never amend the whole garden with one product. The cactus and nightshade will rot or overgrow on a banana diet.",
+      "Keep a dedicated glove/tool cup for Atropa. Do not toss those stems into the edible compost."
+    ],
+    "safety": [
+      "Deadly nightshade is the only high-toxicity food-lookalike here. Berries can be lethal. Isolated pot, label, no kids' reach.",
+      "San Pedro is bioactive, not a salad. Label it. Do not process it on kitchen boards.",
+      "Passionflower species are not interchangeable as tea. Identify yours before herbal use.",
+      "Vanilla beans are food only after proper harvest and curing.",
+      "US poison control: 1-800-222-1222."
+    ],
+    "seasonal": [
+      "Dry season (Nov\u2013Apr): this is when Raincheck will nag you most. Bananas, turmeric, and loofah are first in line.",
+      "Wet season (May\u2013Oct): skip most watering after real rain. Still water bananas if sand dries for ~48 hours. Never add water to San Pedro after storms; check drainage instead.",
+      "Before a hurricane: harvest what you can, stake bananas, lay tall cactus sections down or move pots, dump saucers.",
+      "Vanilla: allow a drier winter rest if you want flowers. Hand-pollinate single-day blooms in the morning."
+    ]
+  },
+  "places": [
+    {
+      "name": "Hobe Sound, Florida",
+      "lat": 27.0595,
+      "lon": -80.1364
+    },
+    {
+      "name": "Stuart, Florida",
+      "lat": 27.1975,
+      "lon": -80.2528
+    },
+    {
+      "name": "Palm City, Florida",
+      "lat": 27.1678,
+      "lon": -80.2664
+    },
+    {
+      "name": "Jupiter, Florida",
+      "lat": 26.9342,
+      "lon": -80.0942
+    },
+    {
+      "name": "Tequesta, Florida",
+      "lat": 26.9681,
+      "lon": -80.1284
+    },
+    {
+      "name": "Port St. Lucie, Florida",
+      "lat": 27.273,
+      "lon": -80.3582
+    },
+    {
+      "name": "Fort Pierce, Florida",
+      "lat": 27.4467,
+      "lon": -80.3256
+    },
+    {
+      "name": "West Palm Beach, Florida",
+      "lat": 26.7153,
+      "lon": -80.0534
+    },
+    {
+      "name": "Boca Raton, Florida",
+      "lat": 26.3683,
+      "lon": -80.1289
+    },
+    {
+      "name": "Fort Lauderdale, Florida",
+      "lat": 26.1224,
+      "lon": -80.1373
+    },
+    {
+      "name": "Miami, Florida",
+      "lat": 25.7617,
+      "lon": -80.1918
+    },
+    {
+      "name": "Homestead, Florida",
+      "lat": 25.4687,
+      "lon": -80.4776
+    },
+    {
+      "name": "Naples, Florida",
+      "lat": 26.142,
+      "lon": -81.7948
+    },
+    {
+      "name": "Fort Myers, Florida",
+      "lat": 26.6406,
+      "lon": -81.8723
+    },
+    {
+      "name": "Key West, Florida",
+      "lat": 24.5551,
+      "lon": -81.78
+    }
+  ],
+  "default_place": {
+    "name": "Hobe Sound, Florida",
+    "lat": 27.0595,
+    "lon": -80.1364
+  },
+  "wmo": {
+    "0": "Clear",
+    "1": "Mostly clear",
+    "2": "Partly cloudy",
+    "3": "Overcast",
+    "45": "Fog",
+    "48": "Rime fog",
+    "51": "Light drizzle",
+    "53": "Drizzle",
+    "55": "Heavy drizzle",
+    "61": "Light rain",
+    "63": "Rain",
+    "65": "Heavy rain",
+    "66": "Freezing rain",
+    "67": "Heavy freezing rain",
+    "71": "Light snow",
+    "73": "Snow",
+    "75": "Heavy snow",
+    "80": "Rain showers",
+    "81": "Showers",
+    "82": "Violent showers",
+    "95": "Thunderstorm",
+    "96": "Thunderstorm with hail",
+    "99": "Heavy thunderstorm with hail"
+  },
+  "wet_season": {
+    "start": [
+      5,
+      1
+    ],
+    "end": [
+      10,
+      15
+    ]
+  },
+  "timezone": "America/New_York"
+}
