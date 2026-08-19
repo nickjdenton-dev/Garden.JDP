@@ -12,7 +12,7 @@
     <link rel="manifest" href="./manifest.json" />
     <link rel="icon" href="./icon.png" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-    <link rel="stylesheet" href="./styles.css?v=9" />
+    <link rel="stylesheet" href="./styles.css?v=10" />
     <script>
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -68,8 +68,9 @@
           <div class="explore">
             <h2 class="section-label">Soil</h2>
             <div id="soils" class="soils"></div>
-            <h2 class="section-label">Library</h2>
-            <ul id="library" class="library"></ul>
+            <input id="explore-search" type="search" placeholder="Encyclopedia" autocomplete="off" />
+            <h2 class="section-label">Encyclopedia</h2>
+            <div id="library"></div>
           </div>
         </section>
       </main>
@@ -91,10 +92,11 @@
       <div id="place-results" class="place-results" hidden></div>
     </aside>
 
-    <script src="./watering.js?v=9"></script>
-    <script src="./weather.js?v=9"></script>
-    <script src="./store.js?v=9"></script>
-    <script src="./glyphs.js?v=9"></script>
-    <script src="./app.js?v=9"></script>
+    <script src="./watering.js?v=10"></script>
+    <script src="./weather.js?v=10"></script>
+    <script src="./store.js?v=10"></script>
+    <script src="./glyphs.js?v=10"></script>
+    <script src="./encyclopedia.js?v=10"></script>
+    <script src="./app.js?v=10"></script>
   </body>
 </html>
