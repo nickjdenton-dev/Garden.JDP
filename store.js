@@ -8,6 +8,7 @@
       last_watered: null,
       active: true,
       weekly_need_override_mm: null,
+      dismissed_on: null,
     }));
   }
 
@@ -25,13 +26,21 @@
     };
   }
 
+  function migrate(parsed) {
+    parsed.plants = (parsed.plants || []).map((plant) => ({
+      ...plant,
+      dismissed_on: plant.dismissed_on ?? null,
+    }));
+    return parsed;
+  }
+
   function load(library) {
     try {
       const raw = localStorage.getItem(KEY);
       if (!raw) return defaultState(library);
       const parsed = JSON.parse(raw);
       if (!parsed.plants || !parsed.settings) return defaultState(library);
-      return parsed;
+      return migrate(parsed);
     } catch {
       return defaultState(library);
     }

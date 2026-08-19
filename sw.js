@@ -1,4 +1,4 @@
-const CACHE = "raincheck-v3";
+const CACHE = "raincheck-v4";
 const PRECACHE = [
   "./",
   "./index.html",
@@ -7,6 +7,7 @@ const PRECACHE = [
   "./watering.js",
   "./weather.js",
   "./store.js",
+  "./glyphs.js",
   "./calendar.js",
   "./library.json",
   "./icon.png",

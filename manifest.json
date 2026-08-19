@@ -1,12 +1,11 @@
 {
-  "name": "Raincheck — South Florida Garden",
+  "name": "Raincheck",
   "short_name": "Raincheck",
-  "description": "Water plants only when Hobe Sound rain was not enough.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#e9e0cc",
-  "theme_color": "#3f4f2e",
+  "background_color": "#F4EDE1",
+  "theme_color": "#F4EDE1",
   "icons": [
     {
       "src": "./icon.png",
