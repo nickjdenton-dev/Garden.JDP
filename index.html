@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Raincheck — South Florida garden</title>
+    <meta name="theme-color" content="#3f4f2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Raincheck" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" href="./icon.png" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Archivo+Narrow:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="paper">
+      <header class="masthead">
+        <div>
+          <p class="kicker">Field station · USDA 10a–11a</p>
+          <h1>Raincheck</h1>
+          <p class="lede">Water only what the sky skipped.</p>
+        </div>
+        <div class="station-meta" id="station-meta">
+          <span>Hobe Sound</span>
+        </div>
+      </header>
+
+      <aside id="install-card" class="card install">
+        <div class="stamp">Phone</div>
+        <h3>Add this to your Home Screen</h3>
+        <p class="reason">
+          iPhone: open in <strong>Safari</strong> (not Chrome) → tap the Share button →
+          <strong>Add to Home Screen</strong>. After that it opens like an app, on cellular, with
+          live Hobe Sound weather. Your computer can be off.
+        </p>
+      </aside>
+
+      <nav class="tabs" role="tablist">
+        <button class="tab is-on" data-tab="station">Station</button>
+        <button class="tab" data-tab="specimens">Specimens</button>
+        <button class="tab" data-tab="notes">Notes</button>
+        <button class="tab" data-tab="settings">Settings</button>
+      </nav>
+
+      <section id="panel-station" class="panel is-on">
+        <form id="station-form" class="station-picker">
+          <p class="kicker">Weather station</p>
+          <label>
+            Search a town
+            <input id="place-search" name="query" placeholder="Hobe Sound, Stuart, Jupiter…" autocomplete="off" />
+          </label>
+          <label>
+            Or pick a nearby town
+            <select name="place" id="place-select"></select>
+          </label>
+          <label>
+            Latitude
+            <input name="latitude" type="number" step="0.0001" required />
+          </label>
+          <label>
+            Longitude
+            <input name="longitude" type="number" step="0.0001" required />
+          </label>
+          <button type="submit">Use this weather</button>
+          <div id="place-results" class="place-results" hidden></div>
+        </form>
+        <p class="summary" id="summary">Checking the weather…</p>
+        <div class="orders" id="orders"></div>
+        <div class="week" id="week"></div>
+        <div class="actions">
+          <button type="button" id="mark-due">Mark due plants watered</button>
+          <button type="button" id="calendar-btn">Download Apple Calendar</button>
+          <button type="button" id="notify-btn">Enable notifications</button>
+        </div>
+        <h2 class="ruled">Seven-day rain</h2>
+        <div class="rain-table" id="rain-table"></div>
+      </section>
+
+      <section id="panel-specimens" class="panel">
+        <form id="add-plant" class="add-form">
+          <label>
+            Species
+            <select name="species_id" id="species-select" required></select>
+          </label>
+          <label>
+            Nickname
+            <input name="nickname" placeholder="e.g. Patio turmeric" required />
+          </label>
+          <label class="grow">
+            Notes
+            <input name="notes" placeholder="Pot size, shade, whatever you want to remember" />
+          </label>
+          <button type="submit">Add plant</button>
+        </form>
+        <div id="specimens" class="specimen-list"></div>
+      </section>
+
+      <section id="panel-notes" class="panel">
+        <article id="advice" class="advice"></article>
+      </section>
+
+      <section id="panel-settings" class="panel">
+        <form id="settings-form" class="settings">
+          <label class="grow">
+            Station name
+            <input id="settings-place-name" placeholder="Hobe Sound, Florida" />
+          </label>
+          <label>
+            Timezone
+            <input id="settings-timezone" placeholder="America/New_York" />
+          </label>
+          <div class="actions">
+            <button type="submit">Save</button>
+            <button type="button" id="reset-garden" class="ghost">Reset plant roster</button>
+          </div>
+          <p class="hint">
+            Plants and your town are saved in this phone’s browser, so it works at work with the
+            computer off. Open the Home Screen icon once a day for a fresh rain check. iOS
+            notifications only fire after Add to Home Screen (Safari, iOS 16.4+). Calendar download
+            still works anywhere.
+          </p>
+        </form>
+      </section>
+    </div>
+    <script src="./watering.js"></script>
+    <script src="./weather.js"></script>
+    <script src="./store.js"></script>
+    <script src="./calendar.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
