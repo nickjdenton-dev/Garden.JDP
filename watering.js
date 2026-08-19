@@ -7,11 +7,15 @@
     return Math.round(Number(value) * 10) / 10;
   }
 
-  function isWetSeason(when) {
+  function isWetSeason(when, snapshot) {
+    if (snapshot && snapshot.wet_season === false) return false;
+    const startPair = (snapshot && snapshot.wet_start) || WET_START;
+    const endPair = (snapshot && snapshot.wet_end) || WET_END;
     const key = when.month * 100 + when.day;
-    const start = WET_START[0] * 100 + WET_START[1];
-    const end = WET_END[0] * 100 + WET_END[1];
-    return start <= key && key <= end;
+    const start = startPair[0] * 100 + startPair[1];
+    const end = endPair[0] * 100 + endPair[1];
+    if (start <= end) return start <= key && key <= end;
+    return key >= start || key <= end;
   }
 
   function effectiveHourMm(precipMm, sprinkleThresholdMm, hourlyCapMm) {
@@ -98,7 +102,7 @@
     const forecastHours = forecast ? forecast.precip_hours : 0;
     const rainProb = rainProbabilityToday(snapshot, nowMs);
     const since = daysSince(plant.last_watered_ms, nowMs);
-    const wet = isWetSeason(now);
+    const wet = isWetSeason(now, snapshot);
     const cycleDays = Math.max(species.lookback_hours / 24, 1);
     const needInWindow = weekly * (cycleDays / 7);
     let remaining = Math.max(0, needInWindow - effective);
