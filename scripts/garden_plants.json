@@ -1,0 +1,1973 @@
+[
+  {
+    "id": "dwarf-banana",
+    "common_name": "Dwarf banana",
+    "wiki": "Musa acuminata",
+    "group": "Fruit",
+    "existing": true
+  },
+  {
+    "id": "mona-lisa-banana",
+    "common_name": "Mona Lisa banana",
+    "wiki": "Musa acuminata",
+    "group": "Fruit",
+    "existing": true
+  },
+  {
+    "id": "passionflower",
+    "common_name": "Passionflower",
+    "wiki": "Passiflora edulis",
+    "group": "Vine",
+    "existing": true
+  },
+  {
+    "id": "vanilla",
+    "common_name": "Vanilla",
+    "wiki": "Vanilla planifolia",
+    "group": "Vine",
+    "existing": true
+  },
+  {
+    "id": "mulberry",
+    "common_name": "Mulberry",
+    "wiki": "Morus (plant)",
+    "group": "Tree",
+    "existing": true
+  },
+  {
+    "id": "turmeric",
+    "common_name": "Turmeric",
+    "wiki": "Turmeric",
+    "group": "Herb",
+    "existing": true
+  },
+  {
+    "id": "san-pedro",
+    "common_name": "San Pedro cactus",
+    "wiki": "Echinopsis pachanoi",
+    "group": "Succulent",
+    "existing": true,
+    "taxon": "Echinopsis pachanoi"
+  },
+  {
+    "id": "loofah",
+    "common_name": "Loofah",
+    "wiki": "Luffa aegyptiaca",
+    "group": "Vine",
+    "existing": true
+  },
+  {
+    "id": "deadly-nightshade",
+    "common_name": "Deadly nightshade",
+    "wiki": "Atropa belladonna",
+    "group": "Toxic",
+    "existing": true
+  },
+  {
+    "id": "butterfly-pea",
+    "common_name": "Butterfly pea",
+    "wiki": "Clitoria ternatea",
+    "group": "Vine",
+    "existing": true
+  },
+  {
+    "id": "mango",
+    "common_name": "Mango",
+    "wiki": "Mango",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Mangifera indica"
+  },
+  {
+    "id": "avocado",
+    "common_name": "Avocado",
+    "wiki": "Avocado",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "papaya",
+    "common_name": "Papaya",
+    "wiki": "Papaya",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "pineapple",
+    "common_name": "Pineapple",
+    "wiki": "Pineapple",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "coconut",
+    "common_name": "Coconut",
+    "wiki": "Coconut",
+    "group": "Tree",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Cocos nucifera"
+  },
+  {
+    "id": "plantain",
+    "common_name": "Plantain",
+    "wiki": "Cooking banana",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Musa paradisiaca"
+  },
+  {
+    "id": "guava",
+    "common_name": "Guava",
+    "wiki": "Guava",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Psidium guajava"
+  },
+  {
+    "id": "lychee",
+    "common_name": "Lychee",
+    "wiki": "Lychee",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "longan",
+    "common_name": "Longan",
+    "wiki": "Longan",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "rambutan",
+    "common_name": "Rambutan",
+    "wiki": "Rambutan",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "jackfruit",
+    "common_name": "Jackfruit",
+    "wiki": "Jackfruit",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "breadfruit",
+    "common_name": "Breadfruit",
+    "wiki": "Breadfruit",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "soursop",
+    "common_name": "Soursop",
+    "wiki": "Soursop",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "sugar-apple",
+    "common_name": "Sugar apple",
+    "wiki": "Annona squamosa",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "cherimoya",
+    "common_name": "Cherimoya",
+    "wiki": "Cherimoya",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "starfruit",
+    "common_name": "Starfruit",
+    "wiki": "Carambola",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "low",
+    "taxon": "Averrhoa carambola"
+  },
+  {
+    "id": "sapodilla",
+    "common_name": "Sapodilla",
+    "wiki": "Manilkara zapota",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "mamey-sapote",
+    "common_name": "Mamey sapote",
+    "wiki": "Pouteria sapota",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "canistel",
+    "common_name": "Canistel",
+    "wiki": "Pouteria campechiana",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "white-sapote",
+    "common_name": "White sapote",
+    "wiki": "Casimiroa edulis",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "black-sapote",
+    "common_name": "Black sapote",
+    "wiki": "Diospyros nigra",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "miracle-fruit",
+    "common_name": "Miracle fruit",
+    "wiki": "Synsepalum dulcificum",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "jaboticaba",
+    "common_name": "Jaboticaba",
+    "wiki": "Plinia cauliflora",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "tamarind",
+    "common_name": "Tamarind",
+    "wiki": "Tamarind",
+    "group": "Tree",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "loquat",
+    "common_name": "Loquat",
+    "wiki": "Loquat",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "fig",
+    "common_name": "Fig",
+    "wiki": "Common fig",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "pomegranate",
+    "common_name": "Pomegranate",
+    "wiki": "Pomegranate",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "persimmon",
+    "common_name": "Persimmon",
+    "wiki": "Persimmon",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Diospyros kaki"
+  },
+  {
+    "id": "date-palm",
+    "common_name": "Date palm",
+    "wiki": "Date palm",
+    "group": "Tree",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "dragon-fruit",
+    "common_name": "Dragon fruit",
+    "wiki": "Selenicereus undatus",
+    "group": "Succulent",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "cacao",
+    "common_name": "Cacao",
+    "wiki": "Theobroma cacao",
+    "group": "Tree",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "coffee",
+    "common_name": "Coffee",
+    "wiki": "Coffea arabica",
+    "group": "Shrub",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "cashew",
+    "common_name": "Cashew",
+    "wiki": "Cashew",
+    "group": "Tree",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "macadamia",
+    "common_name": "Macadamia",
+    "wiki": "Macadamia",
+    "group": "Tree",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Macadamia integrifolia"
+  },
+  {
+    "id": "grape",
+    "common_name": "Grape",
+    "wiki": "Grape",
+    "group": "Vine",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Vitis vinifera"
+  },
+  {
+    "id": "strawberry",
+    "common_name": "Strawberry",
+    "wiki": "Strawberry",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "blueberry",
+    "common_name": "Blueberry",
+    "wiki": "Blueberry",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Vaccinium corymbosum"
+  },
+  {
+    "id": "raspberry",
+    "common_name": "Raspberry",
+    "wiki": "Raspberry",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Rubus idaeus"
+  },
+  {
+    "id": "blackberry",
+    "common_name": "Blackberry",
+    "wiki": "Blackberry",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Rubus"
+  },
+  {
+    "id": "watermelon",
+    "common_name": "Watermelon",
+    "wiki": "Watermelon",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "cantaloupe",
+    "common_name": "Cantaloupe",
+    "wiki": "Cantaloupe",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "kiwi",
+    "common_name": "Kiwifruit",
+    "wiki": "Kiwifruit",
+    "group": "Vine",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Actinidia deliciosa"
+  },
+  {
+    "id": "apple",
+    "common_name": "Apple",
+    "wiki": "Apple",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Malus domestica"
+  },
+  {
+    "id": "pear",
+    "common_name": "Pear",
+    "wiki": "Pear",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Pyrus communis"
+  },
+  {
+    "id": "peach",
+    "common_name": "Peach",
+    "wiki": "Peach",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "plum",
+    "common_name": "Plum",
+    "wiki": "Plum",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Prunus domestica"
+  },
+  {
+    "id": "cherry",
+    "common_name": "Cherry",
+    "wiki": "Cherry",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Prunus avium"
+  },
+  {
+    "id": "apricot",
+    "common_name": "Apricot",
+    "wiki": "Apricot",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Prunus armeniaca"
+  },
+  {
+    "id": "olive",
+    "common_name": "Olive",
+    "wiki": "Olive",
+    "group": "Tree",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "sweet-orange",
+    "common_name": "Sweet orange",
+    "wiki": "Orange (fruit)",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Citrus sinensis"
+  },
+  {
+    "id": "lemon",
+    "common_name": "Lemon",
+    "wiki": "Lemon",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "lime",
+    "common_name": "Lime",
+    "wiki": "Lime (fruit)",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Citrus aurantiifolia"
+  },
+  {
+    "id": "key-lime",
+    "common_name": "Key lime",
+    "wiki": "Key lime",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "grapefruit",
+    "common_name": "Grapefruit",
+    "wiki": "Grapefruit",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "mandarin",
+    "common_name": "Mandarin",
+    "wiki": "Mandarin orange",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "calamondin",
+    "common_name": "Calamondin",
+    "wiki": "Citrus × microcarpa",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "kumquat",
+    "common_name": "Kumquat",
+    "wiki": "Kumquat",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Citrus japonica"
+  },
+  {
+    "id": "pomelo",
+    "common_name": "Pomelo",
+    "wiki": "Pomelo",
+    "group": "Fruit",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "kaffir-lime",
+    "common_name": "Makrut lime",
+    "wiki": "Kaffir lime",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "tomato",
+    "common_name": "Tomato",
+    "wiki": "Tomato",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "pepper",
+    "common_name": "Pepper",
+    "wiki": "Capsicum annuum",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "eggplant",
+    "common_name": "Eggplant",
+    "wiki": "Eggplant",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "okra",
+    "common_name": "Okra",
+    "wiki": "Okra",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "cucumber",
+    "common_name": "Cucumber",
+    "wiki": "Cucumber",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "zucchini",
+    "common_name": "Zucchini",
+    "wiki": "Zucchini",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "pumpkin",
+    "common_name": "Pumpkin",
+    "wiki": "Pumpkin",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Cucurbita pepo"
+  },
+  {
+    "id": "sweet-potato",
+    "common_name": "Sweet potato",
+    "wiki": "Sweet potato",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "cassava",
+    "common_name": "Cassava",
+    "wiki": "Cassava",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "taro",
+    "common_name": "Taro",
+    "wiki": "Taro",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "malanga",
+    "common_name": "Malanga",
+    "wiki": "Xanthosoma sagittifolium",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "yam",
+    "common_name": "Yam",
+    "wiki": "Yam (vegetable)",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Dioscorea"
+  },
+  {
+    "id": "potato",
+    "common_name": "Potato",
+    "wiki": "Potato",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "corn",
+    "common_name": "Corn",
+    "wiki": "Maize",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "common-bean",
+    "common_name": "Common bean",
+    "wiki": "Common bean",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "cowpea",
+    "common_name": "Cowpea",
+    "wiki": "Cowpea",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "pigeon-pea",
+    "common_name": "Pigeon pea",
+    "wiki": "Pigeon pea",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "peanut",
+    "common_name": "Peanut",
+    "wiki": "Peanut",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "lettuce",
+    "common_name": "Lettuce",
+    "wiki": "Lettuce",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "kale",
+    "common_name": "Kale",
+    "wiki": "Kale",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "collard",
+    "common_name": "Collard",
+    "wiki": "Collard (plant)",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "cabbage",
+    "common_name": "Cabbage",
+    "wiki": "Cabbage",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "broccoli",
+    "common_name": "Broccoli",
+    "wiki": "Broccoli",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "spinach",
+    "common_name": "Spinach",
+    "wiki": "Spinach",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "swiss-chard",
+    "common_name": "Swiss chard",
+    "wiki": "Chard",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "amaranth",
+    "common_name": "Amaranth",
+    "wiki": "Amaranth",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Amaranthus"
+  },
+  {
+    "id": "purslane",
+    "common_name": "Purslane",
+    "wiki": "Portulaca oleracea",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "katuk",
+    "common_name": "Katuk",
+    "wiki": "Sauropus androgynus",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "chaya",
+    "common_name": "Chaya",
+    "wiki": "Cnidoscolus aconitifolius",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "moringa",
+    "common_name": "Moringa",
+    "wiki": "Moringa oleifera",
+    "group": "Tree",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "malabar-spinach",
+    "common_name": "Malabar spinach",
+    "wiki": "Basella alba",
+    "group": "Vine",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "chayote",
+    "common_name": "Chayote",
+    "wiki": "Chayote",
+    "group": "Vine",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "bitter-melon",
+    "common_name": "Bitter melon",
+    "wiki": "Momordica charantia",
+    "group": "Vine",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "onion",
+    "common_name": "Onion",
+    "wiki": "Onion",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "garlic",
+    "common_name": "Garlic",
+    "wiki": "Garlic",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "carrot",
+    "common_name": "Carrot",
+    "wiki": "Carrot",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Daucus carota"
+  },
+  {
+    "id": "beet",
+    "common_name": "Beet",
+    "wiki": "Beetroot",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "radish",
+    "common_name": "Radish",
+    "wiki": "Radish",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "asparagus",
+    "common_name": "Asparagus",
+    "wiki": "Asparagus",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "artichoke",
+    "common_name": "Artichoke",
+    "wiki": "Artichoke",
+    "group": "Vegetable",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none",
+    "taxon": "Cynara cardunculus"
+  },
+  {
+    "id": "basil",
+    "common_name": "Basil",
+    "wiki": "Basil",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "mint",
+    "common_name": "Mint",
+    "wiki": "Mentha",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "rosemary",
+    "common_name": "Rosemary",
+    "wiki": "Rosemary",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "thyme",
+    "common_name": "Thyme",
+    "wiki": "Thyme",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none",
+    "taxon": "Thymus vulgaris"
+  },
+  {
+    "id": "oregano",
+    "common_name": "Oregano",
+    "wiki": "Oregano",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "sage",
+    "common_name": "Sage",
+    "wiki": "Salvia officinalis",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "parsley",
+    "common_name": "Parsley",
+    "wiki": "Parsley",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "cilantro",
+    "common_name": "Cilantro",
+    "wiki": "Coriander",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "dill",
+    "common_name": "Dill",
+    "wiki": "Dill",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "chives",
+    "common_name": "Chives",
+    "wiki": "Chives",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "lemongrass",
+    "common_name": "Lemongrass",
+    "wiki": "Cymbopogon citratus",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "ginger",
+    "common_name": "Ginger",
+    "wiki": "Ginger",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "galangal",
+    "common_name": "Galangal",
+    "wiki": "Galangal",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "cardamom",
+    "common_name": "Cardamom",
+    "wiki": "Cardamom",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none",
+    "taxon": "Elettaria cardamomum"
+  },
+  {
+    "id": "cinnamon",
+    "common_name": "Cinnamon",
+    "wiki": "Cinnamon",
+    "group": "Tree",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none",
+    "taxon": "Cinnamomum verum"
+  },
+  {
+    "id": "allspice",
+    "common_name": "Allspice",
+    "wiki": "Allspice",
+    "group": "Tree",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none",
+    "taxon": "Pimenta dioica"
+  },
+  {
+    "id": "bay-laurel",
+    "common_name": "Bay laurel",
+    "wiki": "Laurus nobilis",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "curry-leaf",
+    "common_name": "Curry leaf",
+    "wiki": "Murraya koenigii",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "culantro",
+    "common_name": "Culantro",
+    "wiki": "Eryngium foetidum",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "holy-basil",
+    "common_name": "Holy basil",
+    "wiki": "Ocimum tenuiflorum",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "lavender",
+    "common_name": "Lavender",
+    "wiki": "Lavandula",
+    "group": "Herb",
+    "roles": [
+      "herb",
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "stevia",
+    "common_name": "Stevia",
+    "wiki": "Stevia rebaudiana",
+    "group": "Herb",
+    "roles": [
+      "edible",
+      "herb"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "aloe",
+    "common_name": "Aloe",
+    "wiki": "Aloe vera",
+    "group": "Succulent",
+    "roles": [
+      "functional",
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "roselle",
+    "common_name": "Roselle",
+    "wiki": "Roselle (plant)",
+    "group": "Herb",
+    "roles": [
+      "edible"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "hibiscus",
+    "common_name": "Hibiscus",
+    "wiki": "Hibiscus rosa-sinensis",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "bougainvillea",
+    "common_name": "Bougainvillea",
+    "wiki": "Bougainvillea",
+    "group": "Vine",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low",
+    "taxon": "Bougainvillea"
+  },
+  {
+    "id": "plumeria",
+    "common_name": "Plumeria",
+    "wiki": "Plumeria",
+    "group": "Tree",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "gardenia",
+    "common_name": "Gardenia",
+    "wiki": "Gardenia",
+    "group": "Shrub",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "jasmine",
+    "common_name": "Jasmine",
+    "wiki": "Jasminum",
+    "group": "Vine",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "ixora",
+    "common_name": "Ixora",
+    "wiki": "Ixora",
+    "group": "Shrub",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "croton",
+    "common_name": "Croton",
+    "wiki": "Codiaeum variegatum",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "oleander",
+    "common_name": "Oleander",
+    "wiki": "Nerium oleander",
+    "group": "Toxic",
+    "roles": [
+      "ornamental",
+      "toxic"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "lantana",
+    "common_name": "Lantana",
+    "wiki": "Lantana camara",
+    "group": "Toxic",
+    "roles": [
+      "ornamental",
+      "toxic"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "firebush",
+    "common_name": "Firebush",
+    "wiki": "Hamelia patens",
+    "group": "Shrub",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "beautyberry",
+    "common_name": "Beautyberry",
+    "wiki": "Callicarpa americana",
+    "group": "Shrub",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "coontie",
+    "common_name": "Coontie",
+    "wiki": "Zamia integrifolia",
+    "group": "Toxic",
+    "roles": [
+      "ornamental",
+      "toxic"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "saw-palmetto",
+    "common_name": "Saw palmetto",
+    "wiki": "Serenoa",
+    "group": "Tree",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "cabbage-palm",
+    "common_name": "Cabbage palm",
+    "wiki": "Sabal palmetto",
+    "group": "Tree",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "gumbo-limbo",
+    "common_name": "Gumbo-limbo",
+    "wiki": "Bursera simaruba",
+    "group": "Tree",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "live-oak",
+    "common_name": "Live oak",
+    "wiki": "Quercus virginiana",
+    "group": "Tree",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "sea-grape",
+    "common_name": "Sea grape",
+    "wiki": "Coccoloba uvifera",
+    "group": "Tree",
+    "roles": [
+      "edible",
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "cocoplum",
+    "common_name": "Cocoplum",
+    "wiki": "Chrysobalanus icaco",
+    "group": "Shrub",
+    "roles": [
+      "edible",
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "wild-coffee",
+    "common_name": "Wild coffee",
+    "wiki": "Psychotria nervosa",
+    "group": "Shrub",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "milkweed",
+    "common_name": "Milkweed",
+    "wiki": "Asclepias",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "bird-of-paradise",
+    "common_name": "Bird of paradise",
+    "wiki": "Strelitzia reginae",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "heliconia",
+    "common_name": "Heliconia",
+    "wiki": "Heliconia",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none",
+    "taxon": "Heliconia"
+  },
+  {
+    "id": "canna",
+    "common_name": "Canna",
+    "wiki": "Canna (plant)",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none",
+    "taxon": "Canna indica"
+  },
+  {
+    "id": "ginger-lily",
+    "common_name": "Ginger lily",
+    "wiki": "Hedychium coronarium",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "crinum",
+    "common_name": "Crinum",
+    "wiki": "Crinum",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "agapanthus",
+    "common_name": "Agapanthus",
+    "wiki": "Agapanthus",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "daylily",
+    "common_name": "Daylily",
+    "wiki": "Daylily",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "iris",
+    "common_name": "Iris",
+    "wiki": "Iris (plant)",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low",
+    "taxon": "Iris"
+  },
+  {
+    "id": "rose",
+    "common_name": "Rose",
+    "wiki": "Rose",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "camellia",
+    "common_name": "Camellia",
+    "wiki": "Camellia",
+    "group": "Shrub",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "azalea",
+    "common_name": "Azalea",
+    "wiki": "Azalea",
+    "group": "Shrub",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "high",
+    "taxon": "Rhododendron"
+  },
+  {
+    "id": "hydrangea",
+    "common_name": "Hydrangea",
+    "wiki": "Hydrangea",
+    "group": "Shrub",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "jade-plant",
+    "common_name": "Jade plant",
+    "wiki": "Crassula ovata",
+    "group": "Succulent",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "snake-plant",
+    "common_name": "Snake plant",
+    "wiki": "Dracaena trifasciata",
+    "group": "Succulent",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "agave",
+    "common_name": "Agave",
+    "wiki": "Agave",
+    "group": "Succulent",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "prickly-pear",
+    "common_name": "Prickly pear",
+    "wiki": "Opuntia",
+    "group": "Succulent",
+    "roles": [
+      "edible",
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "echeveria",
+    "common_name": "Echeveria",
+    "wiki": "Echeveria",
+    "group": "Succulent",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "sedum",
+    "common_name": "Sedum",
+    "wiki": "Sedum",
+    "group": "Succulent",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "crown-of-thorns",
+    "common_name": "Crown of thorns",
+    "wiki": "Euphorbia milii",
+    "group": "Succulent",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "desert-rose",
+    "common_name": "Desert rose",
+    "wiki": "Adenium obesum",
+    "group": "Succulent",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "kalanchoe",
+    "common_name": "Kalanchoe",
+    "wiki": "Kalanchoe",
+    "group": "Succulent",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "yucca",
+    "common_name": "Yucca",
+    "wiki": "Yucca",
+    "group": "Succulent",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "zz-plant",
+    "common_name": "ZZ plant",
+    "wiki": "Zamioculcas",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "pothos",
+    "common_name": "Pothos",
+    "wiki": "Epipremnum aureum",
+    "group": "Vine",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "monstera",
+    "common_name": "Monstera",
+    "wiki": "Monstera deliciosa",
+    "group": "Vine",
+    "roles": [
+      "ornamental",
+      "edible"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "peace-lily",
+    "common_name": "Peace lily",
+    "wiki": "Spathiphyllum",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "fiddle-leaf-fig",
+    "common_name": "Fiddle-leaf fig",
+    "wiki": "Ficus lyrata",
+    "group": "Tree",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "rubber-plant",
+    "common_name": "Rubber plant",
+    "wiki": "Ficus elastica",
+    "group": "Tree",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "spider-plant",
+    "common_name": "Spider plant",
+    "wiki": "Chlorophytum comosum",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "staghorn-fern",
+    "common_name": "Staghorn fern",
+    "wiki": "Platycerium",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "bird-nest-fern",
+    "common_name": "Bird's-nest fern",
+    "wiki": "Asplenium nidus",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "tillandsia",
+    "common_name": "Air plant",
+    "wiki": "Tillandsia",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none"
+  },
+  {
+    "id": "phalaenopsis",
+    "common_name": "Moth orchid",
+    "wiki": "Phalaenopsis",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "none",
+    "taxon": "Phalaenopsis"
+  },
+  {
+    "id": "angel-trumpet",
+    "common_name": "Angel's trumpet",
+    "wiki": "Brugmansia",
+    "group": "Toxic",
+    "roles": [
+      "ornamental",
+      "toxic"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "jimsonweed",
+    "common_name": "Jimsonweed",
+    "wiki": "Datura stramonium",
+    "group": "Toxic",
+    "roles": [
+      "toxic"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "castor-bean",
+    "common_name": "Castor bean",
+    "wiki": "Ricinus communis",
+    "group": "Toxic",
+    "roles": [
+      "toxic"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "dieffenbachia",
+    "common_name": "Dieffenbachia",
+    "wiki": "Dieffenbachia",
+    "group": "Toxic",
+    "roles": [
+      "ornamental",
+      "toxic"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "caladium",
+    "common_name": "Caladium",
+    "wiki": "Caladium",
+    "group": "Ornamental",
+    "roles": [
+      "ornamental"
+    ],
+    "toxicity": "low"
+  },
+  {
+    "id": "foxglove",
+    "common_name": "Foxglove",
+    "wiki": "Digitalis",
+    "group": "Toxic",
+    "roles": [
+      "ornamental",
+      "toxic"
+    ],
+    "toxicity": "high"
+  },
+  {
+    "id": "lily-of-the-valley",
+    "common_name": "Lily of the valley",
+    "wiki": "Lily of the valley",
+    "group": "Toxic",
+    "roles": [
+      "ornamental",
+      "toxic"
+    ],
+    "toxicity": "high"
+  }
+]

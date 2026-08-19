@@ -327,12 +327,13 @@ async function addPlant(speciesId) {
 
 async function searchLibrary(query) {
   const q = query.toLowerCase();
-  return Object.values(state.library.species).filter(
-    (s) =>
-      s.common_name.toLowerCase().includes(q) ||
-      (s.scientific_name || "").toLowerCase().includes(q) ||
-      s.id.replace(/-/g, " ").includes(q)
-  );
+  return Object.values(state.library.species).filter((s) => {
+    const blob = [s.common_name, s.scientific_name, s.family, s.group, s.extract, s.id.replace(/-/g, " ")]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+    return blob.includes(q);
+  });
 }
 
 async function searchPlants(query) {
@@ -388,22 +389,26 @@ async function plantWiki(title) {
   const summary = await response.json();
   const extract = summary.extract || summary.description || title;
   const wiki = await wikiTaxon(summary.wikibase_item);
-  const scientific = wiki.taxon || summary.description || "";
+  const facts = await RaincheckEncyclopedia.facts(summary.wikibase_item);
+  const scientific = facts.taxon || wiki.taxon || summary.description || "";
+  const family = facts.family || "";
   const cycle = inferCycle({
     title: summary.title || title,
     extract,
     description: `${summary.description || ""} ${wiki.description || ""}`,
-    taxon: wiki.taxon,
-    family: "",
+    taxon: scientific,
+    family,
   });
   const common = summary.title || title;
+  const wikiUrl =
+    summary.content_urls && summary.content_urls.desktop ? summary.content_urls.desktop.page : "";
   const id = `wiki-${common.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40)}-${Math.random().toString(16).slice(2, 6)}`;
   const species = applyCycle(
     {
       id,
       common_name: common,
       scientific_name: scientific,
-      family: "",
+      family,
       toxicity: "none",
       edible_parts: "",
       sun: "",
@@ -413,12 +418,21 @@ async function plantWiki(title) {
       notes: extract ? [extract] : [],
       warnings: [],
       climate_fit: "unknown",
+      extract,
       image: (summary.thumbnail && summary.thumbnail.source) || "",
-      links:
-        summary.content_urls && summary.content_urls.desktop
-          ? [{ title: "Wikipedia", url: summary.content_urls.desktop.page }]
-          : [],
+      wiki_title: summary.title || title,
+      wiki_url: wikiUrl,
+      wikidata_id: summary.wikibase_item || "",
+      powo_id: facts.powo_id || "",
+      gbif_id: facts.gbif_id || "",
+      links: RaincheckEncyclopedia.links({
+        wiki_url: wikiUrl,
+        powo_id: facts.powo_id,
+        gbif_id: facts.gbif_id,
+        wikidata_id: summary.wikibase_item,
+      }),
       custom: true,
+      encyclopedia: true,
     },
     cycle
   );
@@ -572,8 +586,16 @@ function renderBed() {
   applyMapView();
 }
 
+function featuredSpecies() {
+  const seen = new Set();
+  return SOILS.flatMap((group) => group.ids)
+    .map((id) => state.library.species[id])
+    .filter((s) => s && !seen.has(s.id) && seen.add(s.id));
+}
+
 function renderExplore() {
   const species = state.library.species;
+  const q = ($("#explore-search") && $("#explore-search").value.trim().toLowerCase()) || "";
   $("#soils").innerHTML = SOILS.map((group) => {
     const items = group.ids
       .map((id) => species[id])
@@ -585,15 +607,27 @@ function renderExplore() {
       .join("");
     return `<section class="soil"><h2>${group.name}</h2><div class="soil-row">${items}</div></section>`;
   }).join("");
-  $("#library").innerHTML = Object.values(species)
-    .map((s) => `<li><button type="button" class="lib-hit" data-add="${esc(s.id)}">${esc(s.common_name)}</button></li>`)
+  const groups = ["Fruit", "Vegetable", "Herb", "Vine", "Tree", "Shrub", "Succulent", "Ornamental", "Toxic"];
+  const rows = Object.values(species).filter((s) => {
+    if (!q) return true;
+    const blob = [s.common_name, s.scientific_name, s.family, s.group, s.extract].filter(Boolean).join(" ").toLowerCase();
+    return blob.includes(q);
+  });
+  $("#library").innerHTML = groups
+    .map((name) => {
+      const items = rows.filter((s) => (s.group || "Ornamental") === name);
+      if (!items.length) return "";
+      return `<section class="ency-group"><h2 class="section-label">${esc(name)}</h2><ul class="library">${items
+        .map((s) => `<li><button type="button" class="lib-hit" data-add="${esc(s.id)}">${esc(s.common_name)}</button></li>`)
+        .join("")}</ul></section>`;
+    })
     .join("");
 }
 
 function encyclopedia(species) {
   const image = species.image || species.photo || species.image_url || "";
   const links = species.links || species.sources || [];
-  return { image, links, species };
+  return { image, links, extract: species.extract || "", species };
 }
 
 function listBlock(label, items) {
@@ -645,7 +679,7 @@ function openAddSheet() {
     <input id="plant-search" type="search" placeholder="Plant" autocomplete="off" />
     <div id="plant-results" hidden></div>
     <div class="add-list">
-      ${Object.values(state.library.species)
+      ${featuredSpecies()
         .map((s) => addRow(s, `data-add="${esc(s.id)}"`))
         .join("")}
     </div>
@@ -670,14 +704,16 @@ function openSheet(plantId) {
     <p class="latin">${esc(species.scientific_name || "")}</p>
     ${species.family ? `<p class="family">${esc(species.family)}</p>` : ""}
     <p class="status ${kind}">${statusLabel(kind)}</p>
+    ${info.extract ? `<p class="extract">${esc(info.extract)}</p>` : ""}
+    ${species.native_range ? `<p class="fact">${esc(species.native_range)}</p>` : ""}
     ${species.soil ? `<p class="fact">${esc(species.soil)}</p>` : ""}
     ${species.sun ? `<p class="fact">${esc(species.sun)}</p>` : ""}
     ${species.placement ? `<p class="fact">${esc(species.placement)}</p>` : ""}
     ${species.water_method ? `<p class="fact">${esc(species.water_method)}</p>` : ""}
     ${species.edible_parts ? `<p class="fact">${esc(species.edible_parts)}</p>` : ""}
-    ${species.climate_fit ? `<p class="fact">${esc(species.climate_fit)}</p>` : ""}
+    ${species.climate_fit && species.climate_fit !== "unknown" ? `<p class="fact">${esc(species.climate_fit)}</p>` : ""}
     ${tox ? `<p class="flag">${tox}</p>` : ""}
-    ${listBlock("Notes", species.notes)}
+    ${listBlock("Notes", (species.notes || []).filter((row) => row !== info.extract))}
     ${listBlock("Amendments", species.amendments)}
     ${listBlock("Warnings", species.warnings)}
     ${linkBlock(info.links)}
@@ -805,6 +841,8 @@ $("#library").addEventListener("click", (event) => {
   const btn = event.target.closest("[data-add]");
   if (btn) addPlant(btn.dataset.add);
 });
+
+$("#explore-search").addEventListener("input", () => renderExplore());
 
 $("#place-btn").addEventListener("click", (event) => {
   event.stopPropagation();

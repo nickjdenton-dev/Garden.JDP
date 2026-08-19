@@ -626,10 +626,26 @@ button.ghost {
   color: var(--gold);
 }
 
-.flag {
-  margin: 10px 0 0;
-  font-size: 13px;
-  color: var(--alert);
+.extract {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--green);
+}
+
+#explore-search {
+  width: 100%;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(169, 196, 180, 0.28);
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+  margin: 18px 0 8px;
+}
+
+.ency-group + .ency-group {
+  margin-top: 8px;
 }
 
 .sheet-actions {
