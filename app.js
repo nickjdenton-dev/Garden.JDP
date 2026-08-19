@@ -51,6 +51,7 @@ const state = {
   snapshot: null,
   briefing: null,
   openPlantId: null,
+  adding: false,
 };
 
 const mapView = { x: 0, y: 0, scale: 1 };
@@ -338,8 +339,27 @@ function linkBlock(links) {
 
 function closeSheet() {
   state.openPlantId = null;
+  state.adding = false;
   $("#sheet").hidden = true;
   $("#sheet-backdrop").hidden = true;
+}
+
+function openAddSheet() {
+  if (!state.library) return;
+  state.openPlantId = null;
+  state.adding = true;
+  $("#sheet-body").innerHTML = `
+    <div class="add-list">
+      ${Object.values(state.library.species)
+        .map(
+          (s) =>
+            `<button type="button" class="add-row" data-add="${esc(s.id)}">${RaincheckGlyphs.svg(s.id)}<span>${esc(s.common_name)}</span><b>+</b></button>`
+        )
+        .join("")}
+    </div>
+  `;
+  $("#sheet").hidden = false;
+  $("#sheet-backdrop").hidden = false;
 }
 
 function openSheet(plantId) {
@@ -384,7 +404,8 @@ function renderAll() {
   renderBed();
   renderExplore();
   fillPlaceSelect();
-  if (state.openPlantId) openSheet(state.openPlantId);
+  if (state.adding) openAddSheet();
+  else if (state.openPlantId) openSheet(state.openPlantId);
 }
 
 function maybeNotify(briefing) {
@@ -609,6 +630,11 @@ bed.addEventListener(
   { passive: false }
 );
 
+$("#add-plant").addEventListener("click", (event) => {
+  event.stopPropagation();
+  openAddSheet();
+});
+
 $("#zoom-in").addEventListener("click", (event) => {
   event.stopPropagation();
   zoomBy(1.2);
@@ -620,6 +646,11 @@ $("#zoom-out").addEventListener("click", (event) => {
 });
 
 $("#sheet").addEventListener("click", async (event) => {
+  const add = event.target.closest("[data-add]");
+  if (add) {
+    await addPlant(add.dataset.add);
+    return;
+  }
   const act = event.target.dataset.sheet;
   if (!act || !state.openPlantId) return;
   const id = state.openPlantId;
