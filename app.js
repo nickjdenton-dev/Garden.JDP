@@ -124,8 +124,8 @@ async function backupGarden() {
       await navigator.share({ files: [file], title: "garden.jdp" });
       return;
     }
-  } catch {
-    return;
+  } catch (err) {
+    if (err && err.name === "AbortError") return;
   }
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
