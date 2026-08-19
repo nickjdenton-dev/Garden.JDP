@@ -289,9 +289,10 @@ button.ghost {
 
 .add-fab {
   position: absolute;
-  left: 50%;
+  right: 10px;
   bottom: 12px;
-  transform: translateX(-50%);
+  left: auto;
+  transform: none;
   z-index: 3;
   width: 48px;
   height: 48px;
