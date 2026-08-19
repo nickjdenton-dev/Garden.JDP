@@ -52,7 +52,6 @@ const state = {
   briefing: null,
   openPlantId: null,
   adding: false,
-  pendingAdd: null,
 };
 
 const mapView = { x: 0, y: 0, scale: 1 };
@@ -220,19 +219,6 @@ function inferCycle(parts) {
   return Object.entries(score).sort((a, b) => b[1] - a[1])[0][0];
 }
 
-function cycleOfSpecies(species) {
-  if (species.water_cycle && CYCLES[species.water_cycle]) return species.water_cycle;
-  if (species.overwater_sensitive && Number(species.weekly_need_mm) <= 8) return "dry";
-  if (Number(species.weekly_need_mm) >= 32) return "wet";
-  if (Number(species.weekly_need_mm) >= 24) return "thirsty";
-  return inferCycle({
-    title: species.common_name,
-    extract: (species.notes || []).join(" "),
-    description: species.scientific_name,
-    family: species.family,
-  });
-}
-
 function applyCycle(species, cycleId) {
   const cycle = CYCLES[cycleId] || CYCLES.average;
   Object.keys(CYCLES.average).forEach((key) => {
@@ -243,31 +229,10 @@ function applyCycle(species, cycleId) {
   return species;
 }
 
-function ensureCustomSpecies(plant) {
-  if (!state.garden.custom_species) state.garden.custom_species = {};
-  const current = speciesOf(plant.species_id);
-  if (current.custom) return current;
-  const id = `cycle-${plant.id}`;
-  const copy = { ...current, id, custom: true };
-  state.garden.custom_species[id] = copy;
-  plant.species_id = id;
-  return copy;
-}
-
-function cycleButtons(selected) {
-  return `<div class="cycle-pills">${Object.keys(CYCLES)
-    .map(
-      (id) =>
-        `<button type="button" class="cycle${selected === id ? " is-on" : ""}" data-cycle="${id}">${CYCLES[id].label}</button>`
-    )
-    .join("")}</div>`;
-}
-
 function addRow(species, attrs) {
-  const cycle = cycleOfSpecies(species);
   return `<button type="button" class="add-row" ${attrs}>${RaincheckGlyphs.svg(species.id || "")}<span>${esc(
     species.common_name
-  )}<i class="cycle-hint">${esc(CYCLES[cycle].label)}</i></span><b>+</b></button>`;
+  )}</span><b>+</b></button>`;
 }
 
 function gardenFileName() {
@@ -417,7 +382,7 @@ async function wikiTaxon(qid) {
   }
 }
 
-async function prepareWikiPlant(title) {
+async function plantWiki(title) {
   const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
   if (!response.ok) return;
   const summary = await response.json();
@@ -431,45 +396,13 @@ async function prepareWikiPlant(title) {
     taxon: wiki.taxon,
     family: "",
   });
-  state.pendingAdd = {
-    common_name: summary.title || title,
-    scientific_name: scientific,
-    extract,
-    image: (summary.thumbnail && summary.thumbnail.source) || "",
-    wiki_url: summary.content_urls && summary.content_urls.desktop ? summary.content_urls.desktop.page : "",
-    cycle,
-  };
-  renderPendingAdd();
-}
-
-function renderPendingAdd() {
-  const p = state.pendingAdd;
-  if (!p) return;
-  state.adding = true;
-  $("#sheet-body").innerHTML = `
-    ${p.image ? `<img class="sheet-photo" src="${esc(p.image)}" alt="">` : ""}
-    <h2>${esc(p.common_name)}</h2>
-    <p class="latin">${esc(p.scientific_name)}</p>
-    <p class="fact">${esc(p.extract)}</p>
-    ${cycleButtons(p.cycle)}
-    <div class="sheet-actions">
-      <button type="button" data-sheet="plant">Plant</button>
-      <button type="button" class="ghost" data-sheet="add-back">Back</button>
-    </div>
-  `;
-  $("#sheet").hidden = false;
-  $("#sheet-backdrop").hidden = false;
-}
-
-async function confirmPendingAdd() {
-  const p = state.pendingAdd;
-  if (!p) return;
-  const id = `wiki-${p.common_name.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40)}-${Math.random().toString(16).slice(2, 6)}`;
+  const common = summary.title || title;
+  const id = `wiki-${common.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40)}-${Math.random().toString(16).slice(2, 6)}`;
   const species = applyCycle(
     {
       id,
-      common_name: p.common_name,
-      scientific_name: p.scientific_name,
+      common_name: common,
+      scientific_name: scientific,
       family: "",
       toxicity: "none",
       edible_parts: "",
@@ -477,18 +410,20 @@ async function confirmPendingAdd() {
       soil: "",
       placement: "",
       amendments: [],
-      notes: p.extract ? [p.extract] : [],
+      notes: extract ? [extract] : [],
       warnings: [],
       climate_fit: "unknown",
-      image: p.image,
-      links: p.wiki_url ? [{ title: "Wikipedia", url: p.wiki_url }] : [],
+      image: (summary.thumbnail && summary.thumbnail.source) || "",
+      links:
+        summary.content_urls && summary.content_urls.desktop
+          ? [{ title: "Wikipedia", url: summary.content_urls.desktop.page }]
+          : [],
       custom: true,
     },
-    p.cycle
+    cycle
   );
   if (!state.garden.custom_species) state.garden.custom_species = {};
   state.garden.custom_species[id] = species;
-  state.pendingAdd = null;
   await addPlant(id);
 }
 
@@ -697,17 +632,12 @@ function openPlace() {
 function closeSheet() {
   state.openPlantId = null;
   state.adding = false;
-  state.pendingAdd = null;
   $("#sheet").hidden = true;
   if ($("#place-sheet").hidden) $("#sheet-backdrop").hidden = true;
 }
 
 function openAddSheet() {
   if (!state.library) return;
-  if (state.pendingAdd) {
-    renderPendingAdd();
-    return;
-  }
   state.openPlantId = null;
   state.adding = true;
   closePlace();
@@ -744,7 +674,6 @@ function openSheet(plantId) {
     ${species.sun ? `<p class="fact">${esc(species.sun)}</p>` : ""}
     ${species.placement ? `<p class="fact">${esc(species.placement)}</p>` : ""}
     ${species.water_method ? `<p class="fact">${esc(species.water_method)}</p>` : ""}
-    ${cycleButtons(cycleOfSpecies(species))}
     ${species.edible_parts ? `<p class="fact">${esc(species.edible_parts)}</p>` : ""}
     ${species.climate_fit ? `<p class="fact">${esc(species.climate_fit)}</p>` : ""}
     ${tox ? `<p class="flag">${tox}</p>` : ""}
@@ -1042,7 +971,6 @@ bed.addEventListener(
 
 $("#add-plant").addEventListener("click", (event) => {
   event.stopPropagation();
-  state.pendingAdd = null;
   openAddSheet();
 });
 
@@ -1057,27 +985,9 @@ $("#zoom-out").addEventListener("click", (event) => {
 });
 
 $("#sheet").addEventListener("click", async (event) => {
-  const cycleBtn = event.target.closest("[data-cycle]");
-  if (cycleBtn) {
-    const cycle = cycleBtn.dataset.cycle;
-    if (state.pendingAdd) {
-      state.pendingAdd.cycle = cycle;
-      renderPendingAdd();
-      return;
-    }
-    if (state.openPlantId) {
-      const plant = state.garden.plants.find((p) => p.id === state.openPlantId);
-      if (!plant) return;
-      applyCycle(ensureCustomSpecies(plant), cycle);
-      persist();
-      await refreshWeather();
-      if (state.openPlantId) openSheet(state.openPlantId);
-      return;
-    }
-  }
   const wiki = event.target.closest("[data-wiki]");
   if (wiki) {
-    await prepareWikiPlant(wiki.dataset.wiki);
+    await plantWiki(wiki.dataset.wiki);
     return;
   }
   const add = event.target.closest("[data-add]");
@@ -1086,15 +996,6 @@ $("#sheet").addEventListener("click", async (event) => {
     return;
   }
   const act = event.target.dataset.sheet;
-  if (act === "plant") {
-    await confirmPendingAdd();
-    return;
-  }
-  if (act === "add-back") {
-    state.pendingAdd = null;
-    openAddSheet();
-    return;
-  }
   if (!act || !state.openPlantId) return;
   const id = state.openPlantId;
   if (act === "watered") await markWatered([id]);
@@ -1122,12 +1023,12 @@ $("#sheet").addEventListener("input", (event) => {
       box.innerHTML =
         local.map((s) => addRow(s, `data-add="${esc(s.id)}"`)).join("") +
         remote
-          .map((r) => {
-            const cycle = inferCycle({ title: r.title, extract: r.snippet });
-            return `<button type="button" class="add-row" data-wiki="${esc(r.title)}">${RaincheckGlyphs.svg("")}<span>${esc(
-              r.title
-            )}<i class="cycle-hint">${esc(CYCLES[cycle].label)}</i></span><b>+</b></button>`;
-          })
+          .map(
+            (r) =>
+              `<button type="button" class="add-row" data-wiki="${esc(r.title)}">${RaincheckGlyphs.svg("")}<span>${esc(
+                r.title
+              )}</span><b>+</b></button>`
+          )
           .join("");
     } catch {
       box.hidden = true;
