@@ -3,11 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Raincheck</title>
+    <title>garden.jdp</title>
     <meta name="theme-color" content="#F4EDE1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="Raincheck" />
+    <meta name="apple-mobile-web-app-title" content="garden.jdp" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <link rel="manifest" href="./manifest.json" />
     <link rel="icon" href="./icon.png" />
@@ -17,15 +17,19 @@
   <body>
     <div class="app">
       <header class="top">
-        <h1>Raincheck</h1>
+        <div class="brand">
+          <h1>garden.jdp</h1>
+          <button type="button" id="water-all">Water all</button>
+        </div>
         <div class="place-wrap">
-          <div class="wx">
+          <button type="button" id="place-btn" class="wx">
             <span id="temp">—</span>
-            <button type="button" id="place-btn" class="place">Hobe Sound</button>
-          </div>
+            <span id="place-name">Hobe Sound</span>
+          </button>
           <div id="place-pop" class="place-pop" hidden>
             <input id="place-search" type="search" placeholder="Town" autocomplete="off" />
             <select id="place-select"></select>
+            <button type="button" id="here-btn" class="ghost">Here</button>
             <div id="place-results" class="place-results" hidden></div>
           </div>
         </div>
@@ -40,7 +44,15 @@
               <button type="button" id="thirst-dismiss" class="ghost">Dismiss</button>
             </div>
           </div>
-          <div id="bed" class="bed" role="list"></div>
+          <div class="bed-wrap">
+            <div id="bed" class="bed">
+              <div id="bed-map" class="bed-map" role="list"></div>
+            </div>
+            <div class="bed-tools">
+              <button type="button" class="zoom" id="zoom-in" aria-label="+">+</button>
+              <button type="button" class="zoom" id="zoom-out" aria-label="−">−</button>
+            </div>
+          </div>
         </section>
 
         <section id="panel-explore" class="panel">

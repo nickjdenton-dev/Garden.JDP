@@ -1,4 +1,4 @@
-const CACHE = "raincheck-v5";
+const CACHE = "garden-jdp-v1";
 const PRECACHE = [
   "./",
   "./index.html",
@@ -37,7 +37,7 @@ self.addEventListener("fetch", (event) => {
 
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "WATERING") {
-    self.registration.showNotification("Raincheck", {
+    self.registration.showNotification("garden.jdp", {
       body: event.data.body,
       icon: "./icon.png",
       badge: "./icon.png",

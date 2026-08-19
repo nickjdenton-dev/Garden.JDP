@@ -2,6 +2,9 @@ const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 
 const NY = "America/New_York";
+const APP_NAME = "garden.jdp";
+const MIN_SCALE = 0.75;
+const MAX_SCALE = 3.4;
 
 const SOILS = [
   {
@@ -50,6 +53,12 @@ const state = {
   openPlantId: null,
 };
 
+const mapView = { x: 0, y: 0, scale: 1 };
+const pointers = new Map();
+let lastPinch = 0;
+let drag = null;
+let mapMoved = false;
+
 function todayNy(nowMs = Date.now()) {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone: NY,
@@ -72,13 +81,6 @@ function esc(value) {
 
 function shortPlace(name) {
   return String(name || "Hobe Sound").split(",")[0].trim() || "Hobe Sound";
-}
-
-function firstSentence(text) {
-  const raw = String(text || "").trim();
-  if (!raw) return "";
-  const match = raw.match(/^.+?[.](?=\s|$)/);
-  return match ? match[0] : raw;
 }
 
 function plantLastMs(plant) {
@@ -218,7 +220,7 @@ function fillPlaceSelect() {
 function renderHeader() {
   const temp = state.briefing?.weather?.temp_f;
   $("#temp").textContent = temp == null ? "—" : `${temp}°`;
-  $("#place-btn").textContent = shortPlace(state.garden.settings.place_name);
+  $("#place-name").textContent = shortPlace(state.garden.settings.place_name);
 }
 
 function renderThirst() {
@@ -232,11 +234,52 @@ function renderThirst() {
   $("#thirst-label").textContent = due.length === 1 ? "Thirsty" : `${due.length} thirsty`;
 }
 
+function clampMap() {
+  const bed = $("#bed");
+  const map = $("#bed-map");
+  if (!bed || !map) return;
+  const w = bed.clientWidth;
+  const h = bed.clientHeight;
+  const sw = map.offsetWidth * mapView.scale;
+  const sh = map.offsetHeight * mapView.scale;
+  const minX = Math.min(0, w - sw);
+  const minY = Math.min(0, h - sh);
+  mapView.x = Math.min(0, Math.max(minX, mapView.x));
+  mapView.y = Math.min(0, Math.max(minY, mapView.y));
+}
+
+function applyMapView() {
+  clampMap();
+  const map = $("#bed-map");
+  if (!map) return;
+  map.style.transform = `translate(${mapView.x}px, ${mapView.y}px) scale(${mapView.scale})`;
+}
+
+function zoomAt(clientX, clientY, nextScale) {
+  const bed = $("#bed");
+  const rect = bed.getBoundingClientRect();
+  const px = clientX - rect.left;
+  const py = clientY - rect.top;
+  const prev = mapView.scale;
+  const scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, nextScale));
+  const mx = (px - mapView.x) / prev;
+  const my = (py - mapView.y) / prev;
+  mapView.scale = scale;
+  mapView.x = px - mx * scale;
+  mapView.y = py - my * scale;
+  applyMapView();
+}
+
+function zoomBy(factor) {
+  const bed = $("#bed");
+  const rect = bed.getBoundingClientRect();
+  zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, mapView.scale * factor);
+}
+
 function renderBed() {
   const decisions = state.briefing?.decisions || [];
-  $("#bed").innerHTML = state.garden.plants
+  $("#bed-map").innerHTML = state.garden.plants
     .map((plant) => {
-      const species = state.library.species[plant.species_id] || {};
       const decision = decisions.find((d) => d.plant_id === plant.id);
       const kind = statusOf(decision, plant);
       const spot = plantSpot(plant);
@@ -244,6 +287,7 @@ function renderBed() {
       return `<button type="button" class="stem is-${kind}" style="left:${spot.x}%;top:${spot.y}%" data-plant="${esc(plant.id)}" role="listitem">${glyph}<b>${esc(plant.nickname)}</b></button>`;
     })
     .join("");
+  applyMapView();
 }
 
 function renderExplore() {
@@ -264,6 +308,34 @@ function renderExplore() {
     .join("");
 }
 
+function encyclopedia(species) {
+  const image = species.image || species.photo || species.image_url || "";
+  const links = species.links || species.sources || [];
+  return { image, links, species };
+}
+
+function listBlock(label, items) {
+  const rows = (items || []).filter(Boolean);
+  if (!rows.length) return "";
+  return `<section class="sheet-block"><h3 class="sheet-label">${esc(label)}</h3><ul>${rows.map((row) => `<li>${esc(row)}</li>`).join("")}</ul></section>`;
+}
+
+function linkBlock(links) {
+  if (!Array.isArray(links) || !links.length) return "";
+  const items = links
+    .map((item) => {
+      if (typeof item === "string") return { href: item, label: item };
+      const href = item.url || item.href || "";
+      if (!href) return null;
+      return { href, label: item.title || item.label || href };
+    })
+    .filter(Boolean);
+  if (!items.length) return "";
+  return `<section class="sheet-block"><h3 class="sheet-label">Links</h3><ul class="sheet-links">${items
+    .map((item) => `<li><a href="${esc(item.href)}" target="_blank" rel="noopener">${esc(item.label)}</a></li>`)
+    .join("")}</ul></section>`;
+}
+
 function closeSheet() {
   state.openPlantId = null;
   $("#sheet").hidden = true;
@@ -277,14 +349,25 @@ function openSheet(plantId) {
   const decision = (state.briefing?.decisions || []).find((d) => d.plant_id === plant.id);
   const kind = statusOf(decision, plant);
   const tox = toxLabel(species.toxicity);
+  const info = encyclopedia(species);
   state.openPlantId = plantId;
   $("#sheet-body").innerHTML = `
+    ${info.image ? `<img class="sheet-photo" src="${esc(info.image)}" alt="">` : ""}
     <h2>${esc(plant.nickname)}</h2>
     <p class="latin">${esc(species.scientific_name || "")}</p>
+    ${species.family ? `<p class="family">${esc(species.family)}</p>` : ""}
     <p class="status ${kind}">${statusLabel(kind)}</p>
-    <p class="fact">${esc(firstSentence(species.soil))}</p>
-    <p class="fact">${esc(firstSentence(species.sun))}</p>
+    ${species.soil ? `<p class="fact">${esc(species.soil)}</p>` : ""}
+    ${species.sun ? `<p class="fact">${esc(species.sun)}</p>` : ""}
+    ${species.placement ? `<p class="fact">${esc(species.placement)}</p>` : ""}
+    ${species.water_method ? `<p class="fact">${esc(species.water_method)}</p>` : ""}
+    ${species.edible_parts ? `<p class="fact">${esc(species.edible_parts)}</p>` : ""}
+    ${species.climate_fit ? `<p class="fact">${esc(species.climate_fit)}</p>` : ""}
     ${tox ? `<p class="flag">${tox}</p>` : ""}
+    ${listBlock("Notes", species.notes)}
+    ${listBlock("Amendments", species.amendments)}
+    ${listBlock("Warnings", species.warnings)}
+    ${linkBlock(info.links)}
     <div class="sheet-actions">
       <button type="button" data-sheet="watered">Watered</button>
       ${kind === "water" ? `<button type="button" class="ghost" data-sheet="dismiss">Dismiss</button>` : ""}
@@ -313,7 +396,7 @@ function maybeNotify(briefing) {
   if (navigator.serviceWorker?.controller) {
     navigator.serviceWorker.controller.postMessage({ type: "WATERING", body });
   } else {
-    new Notification("Raincheck", { body, icon: "./icon.png" });
+    new Notification(APP_NAME, { body, icon: "./icon.png" });
   }
 }
 
@@ -335,6 +418,34 @@ function saveStation(placeName, latitude, longitude) {
   return refreshWeather();
 }
 
+async function useHere() {
+  if (!navigator.geolocation) return;
+  const pos = await new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject, {
+      enableHighAccuracy: true,
+      timeout: 12000,
+    });
+  });
+  const lat = pos.coords.latitude;
+  const lon = pos.coords.longitude;
+  let name = "Here";
+  try {
+    const params = new URLSearchParams({
+      latitude: String(lat),
+      longitude: String(lon),
+      language: "en",
+      format: "json",
+    });
+    const response = await fetch(`https://geocoding-api.open-meteo.com/v1/reverse?${params}`);
+    const payload = await response.json();
+    const row = (payload.results || [])[0];
+    if (row) name = [row.name, row.admin1, row.country].filter(Boolean).join(", ");
+  } catch {
+    name = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+  }
+  await saveStation(name, lat, lon);
+}
+
 function markWatered(ids) {
   const stamp = new Date().toISOString();
   const set = new Set(ids);
@@ -345,6 +456,10 @@ function markWatered(ids) {
   });
   persist();
   return refreshWeather();
+}
+
+function waterAll() {
+  return markWatered(state.garden.plants.map((plant) => plant.id));
 }
 
 function dismissToday(ids) {
@@ -387,6 +502,15 @@ $("#place-select").addEventListener("change", async (event) => {
   await saveStation(opt.value, opt.dataset.lat, opt.dataset.lon);
 });
 
+$("#here-btn").addEventListener("click", async (event) => {
+  event.stopPropagation();
+  try {
+    await useHere();
+  } catch {
+    $("#place-pop").hidden = true;
+  }
+});
+
 let searchTimer;
 $("#place-search").addEventListener("input", () => {
   clearTimeout(searchTimer);
@@ -419,13 +543,80 @@ $("#place-results").addEventListener("click", async (event) => {
   await saveStation(btn.dataset.name, btn.dataset.lat, btn.dataset.lon);
 });
 
+$("#water-all").addEventListener("click", () => waterAll());
 $("#thirst-watered").addEventListener("click", () => markWatered(thirstyPlants().map((d) => d.plant_id)));
 $("#thirst-dismiss").addEventListener("click", () => dismissToday(thirstyPlants().map((d) => d.plant_id)));
 
-$("#bed").addEventListener("click", (event) => {
-  const btn = event.target.closest("[data-plant]");
-  if (!btn) return;
-  openSheet(btn.dataset.plant);
+const bed = $("#bed");
+
+bed.addEventListener("pointerdown", (event) => {
+  if (event.target.closest(".bed-tools")) return;
+  pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+  bed.setPointerCapture(event.pointerId);
+  mapMoved = false;
+  if (pointers.size === 1) {
+    drag = { x: event.clientX, y: event.clientY, ox: mapView.x, oy: mapView.y };
+  } else if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    lastPinch = Math.hypot(a.x - b.x, a.y - b.y);
+    drag = null;
+  }
+});
+
+bed.addEventListener("pointermove", (event) => {
+  if (!pointers.has(event.pointerId)) return;
+  pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+  if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    const dist = Math.hypot(a.x - b.x, a.y - b.y);
+    if (lastPinch) {
+      zoomAt((a.x + b.x) / 2, (a.y + b.y) / 2, mapView.scale * (dist / lastPinch));
+      mapMoved = true;
+    }
+    lastPinch = dist;
+    return;
+  }
+  if (!drag) return;
+  const dx = event.clientX - drag.x;
+  const dy = event.clientY - drag.y;
+  if (Math.hypot(dx, dy) > 8) mapMoved = true;
+  if (!mapMoved) return;
+  mapView.x = drag.ox + dx;
+  mapView.y = drag.oy + dy;
+  applyMapView();
+});
+
+function endPointer(event) {
+  const stem = event.target.closest("[data-plant]");
+  pointers.delete(event.pointerId);
+  if (pointers.size < 2) lastPinch = 0;
+  if (pointers.size === 0) {
+    if (!mapMoved && stem) openSheet(stem.dataset.plant);
+    drag = null;
+  }
+}
+
+bed.addEventListener("pointerup", endPointer);
+bed.addEventListener("pointercancel", endPointer);
+
+bed.addEventListener(
+  "wheel",
+  (event) => {
+    event.preventDefault();
+    const factor = event.deltaY < 0 ? 1.12 : 1 / 1.12;
+    zoomAt(event.clientX, event.clientY, mapView.scale * factor);
+  },
+  { passive: false }
+);
+
+$("#zoom-in").addEventListener("click", (event) => {
+  event.stopPropagation();
+  zoomBy(1.2);
+});
+
+$("#zoom-out").addEventListener("click", (event) => {
+  event.stopPropagation();
+  zoomBy(1 / 1.2);
 });
 
 $("#sheet").addEventListener("click", async (event) => {

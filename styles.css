@@ -58,9 +58,16 @@ button {
   padding-bottom: 8px;
 }
 
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
 h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 400;
   letter-spacing: 0.01em;
 }
@@ -71,25 +78,31 @@ h1 {
 }
 
 .wx {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
-}
-
-#temp {
-  font-size: 22px;
-  font-variant-numeric: tabular-nums;
-}
-
-.place {
   appearance: none;
   background: none;
   border: 0;
   padding: 0;
-  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  text-align: right;
+}
+
+#temp {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+#place-name {
+  font-size: 10px;
   color: var(--faint);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
+  max-width: 42vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .place-pop {
@@ -181,7 +194,7 @@ h1 {
   gap: 8px;
 }
 
-button:not(.tab):not(.place):not(.place-hit):not(.stem):not(.lib-hit):not(.soil-item) {
+button:not(.tab):not(.wx):not(.place-hit):not(.stem):not(.lib-hit):not(.soil-item):not(.zoom) {
   appearance: none;
   border: 0;
   border-radius: 999px;
@@ -197,15 +210,55 @@ button.ghost {
   box-shadow: inset 0 0 0 1px var(--line);
 }
 
-.bed {
+.bed-wrap {
   flex: 1 1 auto;
   min-height: 0;
   position: relative;
+}
+
+.bed {
+  height: 100%;
+  position: relative;
   overflow: hidden;
+  touch-action: none;
+  user-select: none;
   background:
     radial-gradient(120% 80% at 50% 110%, rgba(31, 61, 43, 0.08), transparent 55%),
     linear-gradient(180deg, transparent, rgba(169, 196, 180, 0.18));
   border-radius: 28px;
+}
+
+.bed-map {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 132%;
+  height: 132%;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.bed-tools {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: grid;
+  gap: 6px;
+  z-index: 2;
+}
+
+.zoom {
+  appearance: none;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(244, 237, 225, 0.92);
+  color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-size: 20px;
+  line-height: 1;
 }
 
 .stem {
@@ -220,6 +273,7 @@ button.ghost {
   justify-items: center;
   gap: 2px;
   color: var(--sage);
+  touch-action: none;
 }
 
 .stem svg {
@@ -266,7 +320,8 @@ button.ghost {
 }
 
 .section-label,
-.soil h2 {
+.soil h2,
+.sheet-label {
   margin: 0 0 8px;
   font-size: 13px;
   font-weight: 400;
@@ -374,8 +429,18 @@ button.ghost {
   background: var(--paper);
   border-radius: 24px 24px 0 0;
   padding: 22px 22px calc(18px + env(safe-area-inset-bottom));
-  max-height: 52dvh;
+  max-height: 78dvh;
   overflow: auto;
+}
+
+.sheet-photo {
+  display: block;
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin: 0 0 14px;
+  background: rgba(169, 196, 180, 0.28);
 }
 
 .sheet h2 {
@@ -385,9 +450,15 @@ button.ghost {
 }
 
 .latin {
-  margin: 4px 0 12px;
+  margin: 4px 0 4px;
   font-style: italic;
   font-size: 14px;
+  color: var(--faint);
+}
+
+.family {
+  margin: 0 0 12px;
+  font-size: 12px;
   color: var(--faint);
 }
 
@@ -411,8 +482,33 @@ button.ghost {
 .fact {
   margin: 0 0 8px;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--green);
+}
+
+.sheet-block {
+  margin: 14px 0 0;
+}
+
+.sheet-block ul {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--green);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.sheet-block li + li {
+  margin-top: 6px;
+}
+
+.sheet-links {
+  list-style: none;
+  padding: 0;
+}
+
+.sheet-links a {
+  color: var(--gold);
 }
 
 .flag {
