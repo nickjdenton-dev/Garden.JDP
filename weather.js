@@ -115,6 +115,7 @@
         label,
         admin1: admin,
         country,
+        timezone: row.timezone || "",
         lat: Number(row.latitude),
         lon: Number(row.longitude),
       };

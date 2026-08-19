@@ -52,6 +52,7 @@ const state = {
   briefing: null,
   openPlantId: null,
   adding: false,
+  place: null,
 };
 
 const mapView = { x: 0, y: 0, scale: 1 };
@@ -266,6 +267,7 @@ async function restoreGarden(file) {
   const garden = RaincheckStore.parseBackup(await file.text());
   state.garden = garden;
   persist();
+  await refreshPlace(true);
   await refreshWeather();
 }
 
@@ -516,7 +518,9 @@ function renderSaveButton() {
 function renderHeader() {
   const temp = state.briefing?.weather?.temp_f;
   $("#temp").textContent = temp == null ? "—" : `${temp}°`;
-  $("#place-name").textContent = shortPlace(state.garden.settings.place_name);
+  const place = shortPlace(state.garden.settings.place_name);
+  const zone = state.place && state.place.zone_label;
+  $("#place-name").textContent = zone ? `${place} · ${zone}` : place;
 }
 
 function renderThirst() {
@@ -696,6 +700,7 @@ function openSheet(plantId) {
   const kind = statusOf(decision, plant);
   const tox = toxLabel(species.toxicity);
   const info = encyclopedia(species);
+  const live = RaincheckPlace.advice(species, state.place);
   state.openPlantId = plantId;
   closePlace();
   $("#sheet-body").innerHTML = `
@@ -703,19 +708,20 @@ function openSheet(plantId) {
     <h2>${esc(plant.nickname)}</h2>
     <p class="latin">${esc(species.scientific_name || "")}</p>
     ${species.family ? `<p class="family">${esc(species.family)}</p>` : ""}
+    <p class="place-fit">${esc(live.here)}</p>
     <p class="status ${kind}">${statusLabel(kind)}</p>
     ${info.extract ? `<p class="extract">${esc(info.extract)}</p>` : ""}
     ${species.native_range ? `<p class="fact">${esc(species.native_range)}</p>` : ""}
-    ${species.soil ? `<p class="fact">${esc(species.soil)}</p>` : ""}
-    ${species.sun ? `<p class="fact">${esc(species.sun)}</p>` : ""}
-    ${species.placement ? `<p class="fact">${esc(species.placement)}</p>` : ""}
+    ${live.soil ? `<p class="fact">${esc(live.soil)}</p>` : ""}
+    ${live.sun ? `<p class="fact">${esc(live.sun)}</p>` : ""}
+    ${live.placement ? `<p class="fact">${esc(live.placement)}</p>` : ""}
     ${species.water_method ? `<p class="fact">${esc(species.water_method)}</p>` : ""}
     ${species.edible_parts ? `<p class="fact">${esc(species.edible_parts)}</p>` : ""}
-    ${species.climate_fit && species.climate_fit !== "unknown" ? `<p class="fact">${esc(species.climate_fit)}</p>` : ""}
+    ${live.climate_fit ? `<p class="fact">${esc(live.climate_fit)}</p>` : ""}
     ${tox ? `<p class="flag">${tox}</p>` : ""}
-    ${listBlock("Notes", (species.notes || []).filter((row) => row !== info.extract))}
-    ${listBlock("Amendments", species.amendments)}
-    ${listBlock("Warnings", species.warnings)}
+    ${listBlock("Notes", (live.notes || []).filter((row) => row !== info.extract && row !== live.climate_fit))}
+    ${listBlock("Amendments", live.amendments)}
+    ${listBlock("Warnings", live.warnings)}
     ${linkBlock(info.links)}
     <div class="sheet-actions">
       <button type="button" data-sheet="watered">Watered</button>
@@ -751,21 +757,64 @@ function maybeNotify(briefing) {
   }
 }
 
+async function refreshPlace(wait) {
+  const { latitude, longitude, place_name } = state.garden.settings;
+  const lat = Number(latitude);
+  const lon = Number(longitude);
+  const cached = state.garden.settings.place_profile;
+  if (RaincheckPlace.nearby(cached, lat, lon) && cached.fetched_at && Date.now() - Date.parse(cached.fetched_at) < 30 * 86400000) {
+    state.place = cached;
+    return state.place;
+  }
+  state.place = RaincheckPlace.guess(place_name, lat, lon);
+  const work = RaincheckPlace.profile(place_name, lat, lon)
+    .then((profile) => {
+      state.place = profile;
+      state.garden.settings.place_profile = profile;
+      if (profile.timezone) state.garden.settings.timezone = profile.timezone;
+      persist();
+      if (state.snapshot) {
+        state.snapshot.wet_season = profile.wet_season;
+        state.snapshot.wet_start = profile.wet_start;
+        state.snapshot.wet_end = profile.wet_end;
+        state.briefing = buildBriefing(state.snapshot, state.garden.plants, Date.now());
+      }
+      renderAll();
+      return profile;
+    })
+    .catch(() => {
+      state.garden.settings.place_profile = state.place;
+      return state.place;
+    });
+  if (wait) await work;
+  else work.catch(() => {});
+  return state.place;
+}
+
 async function refreshWeather() {
   const { latitude, longitude, timezone, place_name } = state.garden.settings;
+  if (!state.place) await refreshPlace();
   state.snapshot = await RaincheckWeather.fetchWeather(Number(latitude), Number(longitude), timezone);
   state.snapshot.place_name = place_name;
+  if (state.place) {
+    state.snapshot.wet_season = state.place.wet_season;
+    state.snapshot.wet_start = state.place.wet_start;
+    state.snapshot.wet_end = state.place.wet_end;
+  }
   state.briefing = buildBriefing(state.snapshot, state.garden.plants, Date.now());
   renderAll();
   maybeNotify(state.briefing);
 }
 
-function saveStation(placeName, latitude, longitude) {
+async function saveStation(placeName, latitude, longitude, timezone) {
   state.garden.settings.place_name = placeName;
   state.garden.settings.latitude = Number(latitude);
   state.garden.settings.longitude = Number(longitude);
+  if (timezone) state.garden.settings.timezone = timezone;
+  state.garden.settings.place_profile = null;
   persist();
   closePlace();
+  await refreshPlace(true);
   return refreshWeather();
 }
 
@@ -791,6 +840,8 @@ async function useHere() {
     const payload = await response.json();
     const row = (payload.results || [])[0];
     if (row) name = [row.name, row.admin1, row.country].filter(Boolean).join(", ");
+    await saveStation(name, lat, lon, row && row.timezone);
+    return;
   } catch {
     name = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
   }
@@ -882,7 +933,7 @@ $("#place-search").addEventListener("input", () => {
       box.innerHTML = results
         .map(
           (r) =>
-            `<button type="button" class="place-hit" data-name="${esc(r.label)}" data-lat="${r.lat}" data-lon="${r.lon}">${esc(r.label)}</button>`
+            `<button type="button" class="place-hit" data-name="${esc(r.label)}" data-lat="${r.lat}" data-lon="${r.lon}" data-tz="${esc(r.timezone || "")}">${esc(r.label)}</button>`
         )
         .join("");
     } catch {
@@ -894,7 +945,7 @@ $("#place-search").addEventListener("input", () => {
 $("#place-results").addEventListener("click", async (event) => {
   const btn = event.target.closest(".place-hit");
   if (!btn) return;
-  await saveStation(btn.dataset.name, btn.dataset.lat, btn.dataset.lon);
+  await saveStation(btn.dataset.name, btn.dataset.lat, btn.dataset.lon, btn.dataset.tz);
 });
 
 $("#water-all").addEventListener("click", () => waterAll());
@@ -1091,6 +1142,7 @@ async function boot() {
   if (!response.ok) throw new Error("library");
   state.library = await response.json();
   state.garden = await RaincheckStore.loadAsync(state.library);
+  await refreshPlace(false);
   renderAll();
   await refreshWeather();
 }
