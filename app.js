@@ -239,8 +239,8 @@ function openSheet(plantId) {
     <h2>${esc(plant.nickname)}</h2>
     <p class="latin">${esc(species.scientific_name || "")}</p>
     <p class="status ${kind}">${statusLabel(kind)}</p>
-    <p class="fact">${firstSentence(species.soil)}</p>
-    <p class="fact">${firstSentence(species.sun)}</p>
+    <p class="fact">${esc(firstSentence(species.soil))}</p>
+    <p class="fact">${esc(firstSentence(species.sun))}</p>
     ${tox ? `<p class="flag">${tox}</p>` : ""}
     <div class="sheet-actions">
       <button type="button" data-sheet="watered">Watered</button>
