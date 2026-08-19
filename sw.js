@@ -1,4 +1,4 @@
-const CACHE = "garden-jdp-v10";
+const CACHE = "garden-jdp-v11";
 const PRECACHE = [
   "./",
   "./index.html",
@@ -13,6 +13,7 @@ const PRECACHE = [
   "./library.json",
   "./icon.png",
   "./apple-touch-icon.png",
+  "./og.png",
   "./manifest.json",
 ];
 
