@@ -202,7 +202,7 @@ h1 {
   gap: 8px;
 }
 
-button:not(.tab):not(.wx):not(.place-hit):not(.stem):not(.lib-hit):not(.soil-item):not(.zoom):not(.add-row):not(.cycle) {
+button:not(.tab):not(.wx):not(.place-hit):not(.stem):not(.lib-hit):not(.soil-item):not(.zoom):not(.add-row) {
   appearance: none;
   border: 0;
   border-radius: 999px;
@@ -352,41 +352,6 @@ button.ghost {
   display: grid;
   gap: 4px;
   margin-bottom: 12px;
-}
-
-.add-row span {
-  display: grid;
-  gap: 1px;
-}
-
-.cycle-hint {
-  font-style: normal;
-  font-size: 11px;
-  color: var(--gold);
-}
-
-.cycle-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 12px 0 4px;
-}
-
-.cycle {
-  appearance: none;
-  background: transparent;
-  color: var(--ink);
-  box-shadow: inset 0 0 0 1px var(--line);
-  border: 0;
-  border-radius: 999px;
-  padding: 8px 14px;
-  font-size: 14px;
-}
-
-.cycle.is-on {
-  background: var(--gold);
-  color: var(--paper);
-  box-shadow: none;
 }
 
 .stem {
