@@ -172,7 +172,7 @@ h1 {
 }
 
 #thirst-label {
-  color: var(--gold);
+  color: var(--alert);
   font-size: 18px;
 }
 
@@ -181,7 +181,7 @@ h1 {
   gap: 8px;
 }
 
-button:not(.tab):not(.place):not(.place-hit):not(.stem) {
+button:not(.tab):not(.place):not(.place-hit):not(.stem):not(.lib-hit):not(.soil-item) {
   appearance: none;
   border: 0;
   border-radius: 999px;
@@ -243,16 +243,15 @@ button.ghost {
 }
 
 .stem.is-water {
-  color: var(--gold);
+  color: var(--alert);
 }
 
 .stem.is-watch {
-  color: var(--alert);
+  color: var(--gold);
 }
 
 .stem.is-ok {
   color: var(--sage);
-  opacity: 0.72;
 }
 
 .explore {
@@ -292,6 +291,10 @@ button.ghost {
 }
 
 .soil-item {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
   display: grid;
   justify-items: center;
   gap: 4px;
@@ -320,7 +323,16 @@ button.ghost {
 }
 
 .library li {
+  list-style: none;
+}
+
+.lib-hit {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
   color: var(--green);
+  font-size: 16px;
 }
 
 .tabs {
@@ -385,11 +397,11 @@ button.ghost {
 }
 
 .status.water {
-  color: var(--gold);
+  color: var(--alert);
 }
 
 .status.watch {
-  color: var(--alert);
+  color: var(--gold);
 }
 
 .status.ok {
@@ -411,6 +423,7 @@ button.ghost {
 
 .sheet-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 16px;
 }

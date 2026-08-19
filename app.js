@@ -113,6 +113,52 @@ function persist() {
   RaincheckStore.save(state.garden);
 }
 
+function showTab(name) {
+  $$(".tab").forEach((el) => el.classList.toggle("is-on", el.dataset.tab === name));
+  $$(".panel").forEach((el) => el.classList.toggle("is-on", el.id === `panel-${name}`));
+}
+
+function nextNickname(species) {
+  const base = species.common_name;
+  const count = state.garden.plants.filter((p) => p.species_id === species.id).length;
+  return count ? `${base} ${count + 1}` : base;
+}
+
+function plantSpot(plant) {
+  if (BED[plant.id]) return BED[plant.id];
+  const extras = state.garden.plants.filter((p) => !BED[p.id]);
+  const n = Math.max(extras.findIndex((p) => p.id === plant.id), 0);
+  return {
+    x: 14 + (n % 4) * 24,
+    y: 86 - Math.floor(n / 4) * 16,
+  };
+}
+
+async function addPlant(speciesId) {
+  const species = state.library.species[speciesId];
+  if (!species) return;
+  state.garden.plants.push({
+    id: `${speciesId}-${Math.random().toString(16).slice(2, 10)}`,
+    species_id: speciesId,
+    nickname: nextNickname(species),
+    notes: "",
+    last_watered: null,
+    active: true,
+    weekly_need_override_mm: null,
+    dismissed_on: null,
+  });
+  persist();
+  showTab("garden");
+  closeSheet();
+  await refreshWeather();
+}
+
+function removePlant(id) {
+  state.garden.plants = state.garden.plants.filter((p) => p.id !== id);
+  persist();
+  return refreshWeather();
+}
+
 function thirstyPlants() {
   const water = state.briefing?.water || [];
   return water.filter((d) => {
@@ -189,14 +235,11 @@ function renderThirst() {
 function renderBed() {
   const decisions = state.briefing?.decisions || [];
   $("#bed").innerHTML = state.garden.plants
-    .map((plant, index) => {
+    .map((plant) => {
       const species = state.library.species[plant.species_id] || {};
       const decision = decisions.find((d) => d.plant_id === plant.id);
       const kind = statusOf(decision, plant);
-      const spot = BED[plant.id] || {
-        x: 12 + (index % 5) * 19,
-        y: 18 + Math.floor(index / 5) * 28,
-      };
+      const spot = plantSpot(plant);
       const glyph = RaincheckGlyphs.svg(plant.species_id);
       return `<button type="button" class="stem is-${kind}" style="left:${spot.x}%;top:${spot.y}%" data-plant="${esc(plant.id)}" role="listitem">${glyph}<b>${esc(plant.nickname)}</b></button>`;
     })
@@ -211,13 +254,13 @@ function renderExplore() {
       .filter(Boolean)
       .map(
         (s) =>
-          `<div class="soil-item">${RaincheckGlyphs.svg(s.id)}<span>${esc(s.common_name)}</span></div>`
+          `<button type="button" class="soil-item" data-add="${esc(s.id)}">${RaincheckGlyphs.svg(s.id)}<span>${esc(s.common_name)}</span></button>`
       )
       .join("");
     return `<section class="soil"><h2>${group.name}</h2><div class="soil-row">${items}</div></section>`;
   }).join("");
   $("#library").innerHTML = Object.values(species)
-    .map((s) => `<li>${esc(s.common_name)}</li>`)
+    .map((s) => `<li><button type="button" class="lib-hit" data-add="${esc(s.id)}">${esc(s.common_name)}</button></li>`)
     .join("");
 }
 
@@ -245,6 +288,7 @@ function openSheet(plantId) {
     <div class="sheet-actions">
       <button type="button" data-sheet="watered">Watered</button>
       ${kind === "water" ? `<button type="button" class="ghost" data-sheet="dismiss">Dismiss</button>` : ""}
+      <button type="button" class="ghost" data-sheet="remove">Remove</button>
     </div>
   `;
   $("#sheet").hidden = false;
@@ -316,13 +360,20 @@ function dismissToday(ids) {
 
 $$(".tab").forEach((btn) => {
   btn.addEventListener("click", () => {
-    $$(".tab").forEach((el) => el.classList.remove("is-on"));
-    $$(".panel").forEach((el) => el.classList.remove("is-on"));
-    btn.classList.add("is-on");
-    $(`#panel-${btn.dataset.tab}`).classList.add("is-on");
+    showTab(btn.dataset.tab);
     closeSheet();
     $("#place-pop").hidden = true;
   });
+});
+
+$("#soils").addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-add]");
+  if (btn) addPlant(btn.dataset.add);
+});
+
+$("#library").addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-add]");
+  if (btn) addPlant(btn.dataset.add);
 });
 
 $("#place-btn").addEventListener("click", (event) => {
@@ -383,6 +434,7 @@ $("#sheet").addEventListener("click", async (event) => {
   const id = state.openPlantId;
   if (act === "watered") await markWatered([id]);
   if (act === "dismiss") await dismissToday([id]);
+  if (act === "remove") await removePlant(id);
   closeSheet();
 });
 
