@@ -1,4 +1,4 @@
-const CACHE = "garden-jdp-v2";
+const CACHE = "garden-jdp-v3";
 const PRECACHE = [
   "./",
   "./index.html",

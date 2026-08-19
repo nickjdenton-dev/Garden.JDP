@@ -116,6 +116,35 @@ function persist() {
   RaincheckStore.save(state.garden);
 }
 
+async function backupGarden() {
+  const blob = RaincheckStore.backupBlob(state.garden);
+  const file = new File([blob], "garden.jdp.json", { type: "application/json" });
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: "garden.jdp" });
+      return;
+    }
+  } catch {
+    return;
+  }
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "garden.jdp.json";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+async function restoreGarden(file) {
+  if (!file) return;
+  const garden = RaincheckStore.parseBackup(await file.text());
+  state.garden = garden;
+  persist();
+  await refreshWeather();
+}
+
 function showTab(name) {
   $$(".tab").forEach((el) => el.classList.toggle("is-on", el.dataset.tab === name));
   $$(".panel").forEach((el) => el.classList.toggle("is-on", el.id === `panel-${name}`));
@@ -565,6 +594,13 @@ $("#place-results").addEventListener("click", async (event) => {
 });
 
 $("#water-all").addEventListener("click", () => waterAll());
+$("#backup").addEventListener("click", () => backupGarden());
+$("#restore").addEventListener("click", () => $("#restore-file").click());
+$("#restore-file").addEventListener("change", async (event) => {
+  const file = event.target.files && event.target.files[0];
+  event.target.value = "";
+  await restoreGarden(file);
+});
 $("#thirst-watered").addEventListener("click", () => markWatered(thirstyPlants().map((d) => d.plant_id)));
 $("#thirst-dismiss").addEventListener("click", () => dismissToday(thirstyPlants().map((d) => d.plant_id)));
 
@@ -675,7 +711,7 @@ async function boot() {
   const response = await fetch("./library.json");
   if (!response.ok) throw new Error("library");
   state.library = await response.json();
-  state.garden = RaincheckStore.load(state.library);
+  state.garden = await RaincheckStore.loadAsync(state.library);
   renderAll();
   await refreshWeather();
 }

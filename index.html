@@ -19,7 +19,12 @@
       <header class="top">
         <div class="brand">
           <h1>garden.jdp</h1>
-          <button type="button" id="water-all">Water all</button>
+          <div class="brand-actions">
+            <button type="button" id="water-all">Water all</button>
+            <button type="button" id="backup" class="ghost">Backup</button>
+            <button type="button" id="restore" class="ghost">Restore</button>
+            <input id="restore-file" type="file" accept="application/json,.json" hidden />
+          </div>
         </div>
         <div class="place-wrap">
           <button type="button" id="place-btn" class="wx">
