@@ -79,7 +79,6 @@ h1 {
 }
 
 .place-wrap {
-  position: relative;
   text-align: right;
 }
 
@@ -102,6 +101,7 @@ h1 {
 }
 
 #place-name {
+  display: block;
   font-size: 10px;
   color: var(--faint);
   letter-spacing: 0.04em;
@@ -111,23 +111,17 @@ h1 {
   white-space: nowrap;
 }
 
-.place-pop {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  width: min(72vw, 260px);
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 10px;
+.place-sheet {
   display: grid;
-  gap: 8px;
-  box-shadow: 0 12px 32px rgba(20, 38, 26, 0.12);
-  z-index: 5;
+  gap: 10px;
 }
 
-.place-pop input,
-.place-pop select {
+.place-sheet[hidden] {
+  display: none;
+}
+
+.place-sheet input,
+.place-sheet select {
   width: 100%;
   border: 0;
   border-radius: 999px;
@@ -142,6 +136,10 @@ h1 {
   gap: 2px;
   max-height: 160px;
   overflow: auto;
+}
+
+.place-results[hidden] {
+  display: none;
 }
 
 .place-hit {

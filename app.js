@@ -366,17 +366,29 @@ function linkBlock(links) {
     .join("")}</ul></section>`;
 }
 
+function closePlace() {
+  $("#place-sheet").hidden = true;
+  if ($("#sheet").hidden) $("#sheet-backdrop").hidden = true;
+}
+
+function openPlace() {
+  closeSheet();
+  $("#place-sheet").hidden = false;
+  $("#sheet-backdrop").hidden = false;
+}
+
 function closeSheet() {
   state.openPlantId = null;
   state.adding = false;
   $("#sheet").hidden = true;
-  $("#sheet-backdrop").hidden = true;
+  if ($("#place-sheet").hidden) $("#sheet-backdrop").hidden = true;
 }
 
 function openAddSheet() {
   if (!state.library) return;
   state.openPlantId = null;
   state.adding = true;
+  closePlace();
   $("#sheet-body").innerHTML = `
     <div class="add-list">
       ${Object.values(state.library.species)
@@ -400,6 +412,7 @@ function openSheet(plantId) {
   const tox = toxLabel(species.toxicity);
   const info = encyclopedia(species);
   state.openPlantId = plantId;
+  closePlace();
   $("#sheet-body").innerHTML = `
     ${info.image ? `<img class="sheet-photo" src="${esc(info.image)}" alt="">` : ""}
     <h2>${esc(plant.nickname)}</h2>
@@ -464,7 +477,7 @@ function saveStation(placeName, latitude, longitude) {
   state.garden.settings.latitude = Number(latitude);
   state.garden.settings.longitude = Number(longitude);
   persist();
-  $("#place-pop").hidden = true;
+  closePlace();
   return refreshWeather();
 }
 
@@ -527,7 +540,7 @@ $$(".tab").forEach((btn) => {
   btn.addEventListener("click", () => {
     showTab(btn.dataset.tab);
     closeSheet();
-    $("#place-pop").hidden = true;
+    closePlace();
   });
 });
 
@@ -543,7 +556,8 @@ $("#library").addEventListener("click", (event) => {
 
 $("#place-btn").addEventListener("click", (event) => {
   event.stopPropagation();
-  $("#place-pop").hidden = !$("#place-pop").hidden;
+  if ($("#place-sheet").hidden) openPlace();
+  else closePlace();
 });
 
 $("#place-select").addEventListener("change", async (event) => {
@@ -557,7 +571,7 @@ $("#here-btn").addEventListener("click", async (event) => {
   try {
     await useHere();
   } catch {
-    $("#place-pop").hidden = true;
+    closePlace();
   }
 });
 
@@ -696,11 +710,9 @@ $("#sheet").addEventListener("click", async (event) => {
   closeSheet();
 });
 
-$("#sheet-backdrop").addEventListener("click", closeSheet);
-
-document.addEventListener("click", (event) => {
-  if (event.target.closest(".place-wrap")) return;
-  $("#place-pop").hidden = true;
+$("#sheet-backdrop").addEventListener("click", () => {
+  closeSheet();
+  closePlace();
 });
 
 if ("serviceWorker" in navigator) {

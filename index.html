@@ -31,12 +31,6 @@
             <span id="temp">—</span>
             <span id="place-name">Hobe Sound</span>
           </button>
-          <div id="place-pop" class="place-pop" hidden>
-            <input id="place-search" type="search" placeholder="Town" autocomplete="off" />
-            <select id="place-select"></select>
-            <button type="button" id="here-btn" class="ghost">Here</button>
-            <div id="place-results" class="place-results" hidden></div>
-          </div>
         </div>
       </header>
 
@@ -80,6 +74,12 @@
     <div id="sheet-backdrop" class="backdrop" hidden></div>
     <aside id="sheet" class="sheet" hidden>
       <div id="sheet-body"></div>
+    </aside>
+    <aside id="place-sheet" class="sheet place-sheet" hidden>
+      <input id="place-search" type="search" placeholder="Town" autocomplete="off" />
+      <select id="place-select"></select>
+      <button type="button" id="here-btn" class="ghost">Here</button>
+      <div id="place-results" class="place-results" hidden></div>
     </aside>
 
     <script src="./watering.js"></script>
