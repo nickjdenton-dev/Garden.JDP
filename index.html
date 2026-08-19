@@ -12,7 +12,16 @@
     <link rel="manifest" href="./manifest.json" />
     <link rel="icon" href="./icon.png" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=5" />
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (regs) {
+          regs.forEach(function (reg) {
+            reg.update();
+          });
+        });
+      }
+    </script>
   </head>
   <body>
     <div class="app">
@@ -82,10 +91,10 @@
       <div id="place-results" class="place-results" hidden></div>
     </aside>
 
-    <script src="./watering.js"></script>
-    <script src="./weather.js"></script>
-    <script src="./store.js"></script>
-    <script src="./glyphs.js"></script>
-    <script src="./app.js"></script>
+    <script src="./watering.js?v=5"></script>
+    <script src="./weather.js?v=5"></script>
+    <script src="./store.js?v=5"></script>
+    <script src="./glyphs.js?v=5"></script>
+    <script src="./app.js?v=5"></script>
   </body>
 </html>

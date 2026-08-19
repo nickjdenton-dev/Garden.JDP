@@ -81,7 +81,12 @@ function esc(value) {
 }
 
 function shortPlace(name) {
-  return String(name || "Hobe Sound").split(",")[0].trim() || "Hobe Sound";
+  const raw = String(name || "Hobe Sound").trim();
+  const parts = raw.split(",").map((part) => part.trim());
+  if (parts.length >= 2 && /^-?\d+(\.\d+)?$/.test(parts[0]) && /^-?\d+(\.\d+)?$/.test(parts[1])) {
+    return "Here";
+  }
+  return parts[0] || "Hobe Sound";
 }
 
 function plantLastMs(plant) {
@@ -716,7 +721,10 @@ $("#sheet-backdrop").addEventListener("click", () => {
 });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js");
+  navigator.serviceWorker.register("./sw.js", { updateViaCache: "none" }).then((reg) => {
+    reg.update();
+    if (reg.waiting) reg.waiting.postMessage({ type: "SKIP_WAITING" });
+  });
 }
 
 async function boot() {
