@@ -1,4 +1,4 @@
-const CACHE = "garden-jdp-v5";
+const CACHE = "garden-jdp-v6";
 const PRECACHE = [
   "./",
   "./index.html",
@@ -47,6 +47,7 @@ function networkFirst(request) {
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
   if (url.hostname.includes("open-meteo.com") || url.pathname.startsWith("/api/")) return;
   event.respondWith(networkFirst(event.request));
 });

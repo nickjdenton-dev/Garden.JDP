@@ -12,7 +12,7 @@
     <link rel="manifest" href="./manifest.json" />
     <link rel="icon" href="./icon.png" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
-    <link rel="stylesheet" href="./styles.css?v=5" />
+    <link rel="stylesheet" href="./styles.css?v=6" />
     <script>
       if ("serviceWorker" in navigator) {
         navigator.serviceWorker.getRegistrations().then(function (regs) {
@@ -29,9 +29,7 @@
         <div class="brand">
           <h1>garden.jdp</h1>
           <div class="brand-actions">
-            <button type="button" id="water-all">Water all</button>
-            <button type="button" id="backup" class="ghost">Backup</button>
-            <button type="button" id="restore" class="ghost">Restore</button>
+            <button type="button" id="garden-file" class="ghost">Save your garden</button>
             <input id="restore-file" type="file" accept="application/json,.json" hidden />
           </div>
         </div>
@@ -55,6 +53,7 @@
           <div class="bed-wrap">
             <div id="bed" class="bed">
               <div id="bed-map" class="bed-map" role="list"></div>
+              <p class="legend">red thirsty · gold watch · green ok</p>
             </div>
             <div class="bed-tools">
               <button type="button" class="zoom" id="zoom-in" aria-label="in">+</button>
@@ -62,6 +61,7 @@
             </div>
             <button type="button" class="add-fab" id="add-plant" aria-label="+">+</button>
           </div>
+          <button type="button" id="water-all">Water all</button>
         </section>
 
         <section id="panel-explore" class="panel">
@@ -91,10 +91,10 @@
       <div id="place-results" class="place-results" hidden></div>
     </aside>
 
-    <script src="./watering.js?v=5"></script>
-    <script src="./weather.js?v=5"></script>
-    <script src="./store.js?v=5"></script>
-    <script src="./glyphs.js?v=5"></script>
-    <script src="./app.js?v=5"></script>
+    <script src="./watering.js?v=6"></script>
+    <script src="./weather.js?v=6"></script>
+    <script src="./store.js?v=6"></script>
+    <script src="./glyphs.js?v=6"></script>
+    <script src="./app.js?v=6"></script>
   </body>
 </html>

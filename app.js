@@ -59,6 +59,13 @@ const pointers = new Map();
 let lastPinch = 0;
 let drag = null;
 let mapMoved = false;
+let holdTimer = null;
+let movingPlant = null;
+
+function clearHold() {
+  if (holdTimer) clearTimeout(holdTimer);
+  holdTimer = null;
+}
 
 function todayNy(nowMs = Date.now()) {
   return new Intl.DateTimeFormat("en-CA", {
@@ -121,12 +128,79 @@ function persist() {
   RaincheckStore.save(state.garden);
 }
 
+function speciesMap() {
+  return { ...(state.library?.species || {}), ...(state.garden?.custom_species || {}) };
+}
+
+function speciesOf(id) {
+  return speciesMap()[id] || {};
+}
+
+function wateringGuess(text) {
+  const t = String(text || "").toLowerCase();
+  const base = {
+    weekly_need_mm: 18,
+    kc: 0.7,
+    skip_if_rain_mm: 12,
+    lookback_hours: 72,
+    min_interval_days: 3,
+    max_interval_days: 7,
+    overwater_sensitive: false,
+    sprinkle_threshold_mm: 0.7,
+    hourly_cap_mm: 10,
+    dormant_months: [],
+    dormant_factor: 1,
+    water_method: "deep soak",
+  };
+  if (/cact|succulent|agave|aloe|euphorbia|san pedro|trichocereus|echinopsis/.test(t)) {
+    return {
+      ...base,
+      weekly_need_mm: 6,
+      skip_if_rain_mm: 4,
+      lookback_hours: 168,
+      min_interval_days: 10,
+      max_interval_days: 21,
+      overwater_sensitive: true,
+      sprinkle_threshold_mm: 0.3,
+      hourly_cap_mm: 8,
+      water_method: "rare deep soak, then dry",
+    };
+  }
+  if (/orchid|vanilla|epiphyt/.test(t)) {
+    return {
+      ...base,
+      weekly_need_mm: 12,
+      skip_if_rain_mm: 10,
+      min_interval_days: 4,
+      max_interval_days: 10,
+      overwater_sensitive: true,
+      water_method: "moist mulch / light",
+    };
+  }
+  if (/banana|musa|tropic|ginger|turmeric|curcuma|colocasia/.test(t)) {
+    return {
+      ...base,
+      weekly_need_mm: 28,
+      skip_if_rain_mm: 18,
+      lookback_hours: 48,
+      min_interval_days: 1.5,
+      max_interval_days: 3.5,
+    };
+  }
+  return base;
+}
+
+function gardenFileName() {
+  return `your-garden-${todayNy()}.json`;
+}
+
 async function backupGarden() {
   const blob = RaincheckStore.backupBlob(state.garden);
-  const file = new File([blob], "garden.jdp.json", { type: "application/json" });
+  const name = gardenFileName();
+  const file = new File([blob], name, { type: "application/json" });
   try {
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({ files: [file], title: "garden.jdp" });
+      await navigator.share({ files: [file], title: name });
       return;
     }
   } catch (err) {
@@ -135,7 +209,7 @@ async function backupGarden() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "garden.jdp.json";
+  link.download = name;
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -162,8 +236,9 @@ function nextNickname(species) {
 }
 
 function plantSpot(plant) {
+  if (plant.x != null && plant.y != null) return { x: plant.x, y: plant.y };
   if (BED[plant.id]) return BED[plant.id];
-  const extras = state.garden.plants.filter((p) => !BED[p.id]);
+  const extras = state.garden.plants.filter((p) => !BED[p.id] && p.x == null);
   const n = Math.max(extras.findIndex((p) => p.id === plant.id), 0);
   return {
     x: 14 + (n % 4) * 24,
@@ -171,9 +246,22 @@ function plantSpot(plant) {
   };
 }
 
+function clientToPercent(clientX, clientY) {
+  const bedEl = $("#bed");
+  const map = $("#bed-map");
+  const rect = bedEl.getBoundingClientRect();
+  const mx = (clientX - rect.left - mapView.x) / mapView.scale;
+  const my = (clientY - rect.top - mapView.y) / mapView.scale;
+  return {
+    x: Math.min(96, Math.max(4, (mx / map.offsetWidth) * 100)),
+    y: Math.min(96, Math.max(4, (my / map.offsetHeight) * 100)),
+  };
+}
+
 async function addPlant(speciesId) {
-  const species = state.library.species[speciesId];
-  if (!species) return;
+  const species = speciesOf(speciesId);
+  if (!species.id) return;
+  const count = state.garden.plants.length;
   state.garden.plants.push({
     id: `${speciesId}-${Math.random().toString(16).slice(2, 10)}`,
     species_id: speciesId,
@@ -183,11 +271,60 @@ async function addPlant(speciesId) {
     active: true,
     weekly_need_override_mm: null,
     dismissed_on: null,
+    x: 20 + (count % 4) * 20,
+    y: 28 + Math.floor(count / 4) * 18,
   });
   persist();
   showTab("garden");
   closeSheet();
   await refreshWeather();
+}
+
+async function searchPlants(query) {
+  const params = new URLSearchParams({
+    action: "opensearch",
+    search: query,
+    limit: "8",
+    namespace: "0",
+    origin: "*",
+    format: "json",
+  });
+  const response = await fetch(`https://en.wikipedia.org/w/api.php?${params}`);
+  if (!response.ok) return [];
+  const data = await response.json();
+  return (data[1] || []).map((title, index) => ({ title, snippet: (data[2] || [])[index] || "" }));
+}
+
+async function addWikiPlant(title) {
+  const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title)}`);
+  if (!response.ok) return;
+  const summary = await response.json();
+  const extract = summary.extract || summary.description || title;
+  const id = `wiki-${title.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40)}-${Math.random().toString(16).slice(2, 6)}`;
+  const species = {
+    id,
+    common_name: summary.title || title,
+    scientific_name: summary.description || "",
+    family: "",
+    toxicity: "none",
+    edible_parts: "",
+    ...wateringGuess(`${title} ${extract}`),
+    sun: "",
+    soil: "",
+    placement: "",
+    amendments: [],
+    notes: extract ? [extract] : [],
+    warnings: [],
+    climate_fit: "unknown",
+    image: (summary.thumbnail && summary.thumbnail.source) || "",
+    links: summary.content_urls?.desktop?.page
+      ? [{ title: "Wikipedia", url: summary.content_urls.desktop.page }]
+      : [],
+    custom: true,
+  };
+  if (!state.garden.custom_species) state.garden.custom_species = {};
+  state.garden.custom_species[id] = species;
+  await addPlant(id);
 }
 
 function removePlant(id) {
@@ -206,11 +343,13 @@ function thirstyPlants() {
 
 function buildBriefing(snapshot, plants, nowMs) {
   const settings = state.garden.settings;
+  const map = speciesMap();
+  const known = plants.filter((plant) => map[plant.species_id]);
   const decisions = RaincheckWatering.decideAll(
-    withWaterTimes(plants),
+    withWaterTimes(known),
     snapshot,
     nowMs,
-    state.library.species
+    map
   );
   const water = decisions.filter((d) => d.action === "water");
   const watch = decisions.filter((d) => d.action === "watch");
@@ -250,6 +389,14 @@ function fillPlaceSelect() {
     .map((p) => `<option value="${esc(p.name)}" data-lat="${p.lat}" data-lon="${p.lon}">${esc(p.name)}</option>`)
     .join("");
   if (places.some((p) => p.name === name)) select.value = name;
+}
+
+function renderSaveButton() {
+  const btn = $("#garden-file");
+  if (!btn || !state.garden) return;
+  const empty = !state.garden.plants.length;
+  btn.textContent = empty ? "Upload" : "Save your garden";
+  btn.dataset.mode = empty ? "upload" : "save";
 }
 
 function renderHeader() {
@@ -395,6 +542,8 @@ function openAddSheet() {
   state.adding = true;
   closePlace();
   $("#sheet-body").innerHTML = `
+    <input id="plant-search" type="search" placeholder="Plant" autocomplete="off" />
+    <div id="plant-results" hidden></div>
     <div class="add-list">
       ${Object.values(state.library.species)
         .map(
@@ -411,7 +560,7 @@ function openAddSheet() {
 function openSheet(plantId) {
   const plant = state.garden.plants.find((p) => p.id === plantId);
   if (!plant) return;
-  const species = state.library.species[plant.species_id] || {};
+  const species = speciesOf(plant.species_id);
   const decision = (state.briefing?.decisions || []).find((d) => d.plant_id === plant.id);
   const kind = statusOf(decision, plant);
   const tox = toxLabel(species.toxicity);
@@ -447,6 +596,7 @@ function openSheet(plantId) {
 
 function renderAll() {
   renderHeader();
+  renderSaveButton();
   renderThirst();
   renderBed();
   renderExplore();
@@ -613,8 +763,10 @@ $("#place-results").addEventListener("click", async (event) => {
 });
 
 $("#water-all").addEventListener("click", () => waterAll());
-$("#backup").addEventListener("click", () => backupGarden());
-$("#restore").addEventListener("click", () => $("#restore-file").click());
+$("#garden-file").addEventListener("click", () => {
+  if ($("#garden-file").dataset.mode === "upload") $("#restore-file").click();
+  else backupGarden();
+});
 $("#restore-file").addEventListener("change", async (event) => {
   const file = event.target.files && event.target.files[0];
   event.target.value = "";
@@ -626,13 +778,23 @@ $("#thirst-dismiss").addEventListener("click", () => dismissToday(thirstyPlants(
 const bed = $("#bed");
 
 bed.addEventListener("pointerdown", (event) => {
-  if (event.target.closest(".bed-tools")) return;
+  if (event.target.closest(".bed-tools") || event.target.closest(".add-fab")) return;
   pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
   bed.setPointerCapture(event.pointerId);
   mapMoved = false;
+  const stem = event.target.closest("[data-plant]");
+  if (stem && pointers.size === 1) {
+    holdTimer = setTimeout(() => {
+      movingPlant = stem.dataset.plant;
+      stem.classList.add("is-lifted");
+      mapMoved = true;
+      drag = null;
+    }, 420);
+  }
   if (pointers.size === 1) {
     drag = { x: event.clientX, y: event.clientY, ox: mapView.x, oy: mapView.y };
   } else if (pointers.size === 2) {
+    clearHold();
     const [a, b] = [...pointers.values()];
     lastPinch = Math.hypot(a.x - b.x, a.y - b.y);
     drag = null;
@@ -642,6 +804,19 @@ bed.addEventListener("pointerdown", (event) => {
 bed.addEventListener("pointermove", (event) => {
   if (!pointers.has(event.pointerId)) return;
   pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+  if (movingPlant) {
+    const plant = state.garden.plants.find((p) => p.id === movingPlant);
+    if (!plant) return;
+    const pct = clientToPercent(event.clientX, event.clientY);
+    plant.x = pct.x;
+    plant.y = pct.y;
+    const el = document.querySelector(`[data-plant="${movingPlant}"]`);
+    if (el) {
+      el.style.left = `${pct.x}%`;
+      el.style.top = `${pct.y}%`;
+    }
+    return;
+  }
   if (pointers.size === 2) {
     const [a, b] = [...pointers.values()];
     const dist = Math.hypot(a.x - b.x, a.y - b.y);
@@ -655,7 +830,10 @@ bed.addEventListener("pointermove", (event) => {
   if (!drag) return;
   const dx = event.clientX - drag.x;
   const dy = event.clientY - drag.y;
-  if (Math.hypot(dx, dy) > 8) mapMoved = true;
+  if (Math.hypot(dx, dy) > 8) {
+    mapMoved = true;
+    clearHold();
+  }
   if (!mapMoved) return;
   mapView.x = drag.ox + dx;
   mapView.y = drag.oy + dy;
@@ -667,6 +845,15 @@ function endPointer(event) {
   pointers.delete(event.pointerId);
   if (pointers.size < 2) lastPinch = 0;
   if (pointers.size === 0) {
+    clearHold();
+    if (movingPlant) {
+      const el = document.querySelector(`[data-plant="${movingPlant}"]`);
+      if (el) el.classList.remove("is-lifted");
+      persist();
+      movingPlant = null;
+      drag = null;
+      return;
+    }
     if (!mapMoved && stem) openSheet(stem.dataset.plant);
     drag = null;
   }
@@ -701,6 +888,11 @@ $("#zoom-out").addEventListener("click", (event) => {
 });
 
 $("#sheet").addEventListener("click", async (event) => {
+  const wiki = event.target.closest("[data-wiki]");
+  if (wiki) {
+    await addWikiPlant(wiki.dataset.wiki);
+    return;
+  }
   const add = event.target.closest("[data-add]");
   if (add) {
     await addPlant(add.dataset.add);
@@ -713,6 +905,34 @@ $("#sheet").addEventListener("click", async (event) => {
   if (act === "dismiss") await dismissToday([id]);
   if (act === "remove") await removePlant(id);
   closeSheet();
+});
+
+let plantSearchTimer;
+$("#sheet").addEventListener("input", (event) => {
+  if (event.target.id !== "plant-search") return;
+  clearTimeout(plantSearchTimer);
+  const q = event.target.value.trim();
+  const box = $("#plant-results");
+  if (!box) return;
+  if (q.length < 2) {
+    box.hidden = true;
+    box.innerHTML = "";
+    return;
+  }
+  plantSearchTimer = setTimeout(async () => {
+    try {
+      const results = await searchPlants(q);
+      box.hidden = false;
+      box.innerHTML = results
+        .map(
+          (r) =>
+            `<button type="button" class="add-row" data-wiki="${esc(r.title)}">${RaincheckGlyphs.svg("")}<span>${esc(r.title)}</span><b>+</b></button>`
+        )
+        .join("");
+    } catch {
+      box.hidden = true;
+    }
+  }, 280);
 });
 
 $("#sheet-backdrop").addEventListener("click", () => {

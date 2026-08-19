@@ -24,11 +24,13 @@
         timezone: library.timezone || "America/New_York",
         notify_hour: 7,
       },
-      plants: seedPlants(library),
+      plants: [],
+      custom_species: {},
     };
   }
 
   function migrate(parsed) {
+    parsed.custom_species = parsed.custom_species || {};
     parsed.plants = (parsed.plants || []).map((plant) => ({
       ...plant,
       dismissed_on: plant.dismissed_on ?? null,
